@@ -26,9 +26,9 @@ body {
   margin: 0;
   color: #0a2d35;
   background:
-    linear-gradient(115deg, rgba(13, 61, 71, 0.06) 0%, rgba(246, 250, 248, 0) 34%),
-    linear-gradient(245deg, rgba(183, 119, 43, 0.11) 0%, rgba(246, 250, 248, 0) 28%),
-    #f5f8f6;
+    linear-gradient(115deg, rgba(13, 61, 71, 0.05) 0%, rgba(236, 240, 243, 0) 34%),
+    linear-gradient(245deg, rgba(183, 119, 43, 0.1) 0%, rgba(236, 240, 243, 0) 28%),
+    #ecf0f3;
 }
 
 body::before {
@@ -75,10 +75,106 @@ img {
   opacity: 0;
 }
 
+.soft-card {
+  border: 1px solid rgba(255, 255, 255, 0.64);
+  border-radius: 22px;
+  background: #ecf0f3;
+  box-shadow:
+    inset 10px 10px 20px #cfd8e3,
+    inset -10px -10px 20px #ffffff,
+    0 18px 46px rgba(13, 61, 71, 0.08);
+}
+
+.soft-card:hover {
+  box-shadow:
+    inset 7px 7px 16px #cfd8e3,
+    inset -7px -7px 16px #ffffff,
+    0 26px 60px rgba(13, 61, 71, 0.12);
+}
+
+.soft-card-dark {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 22px;
+  background: #0d3d47;
+  box-shadow:
+    inset 10px 10px 20px rgba(3, 26, 31, 0.72),
+    inset -10px -10px 20px rgba(255, 255, 255, 0.08),
+    0 22px 55px rgba(2, 16, 19, 0.24);
+}
+
+.soft-button {
+  border: none;
+  border-radius: 16px;
+  background: #ecf0f3;
+  box-shadow:
+    inset 8px 8px 16px #cfd8e3,
+    inset -8px -8px 16px #ffffff;
+  transition:
+    color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.soft-button:hover {
+  color: #0d3d47;
+  transform: translateY(-1px);
+}
+
+.soft-button:active {
+  box-shadow:
+    inset 12px 12px 22px #cfd8e3,
+    inset -12px -12px 22px #ffffff;
+}
+
+.soft-pill {
+  border-radius: 16px;
+  background: #ecf0f3;
+  padding: 0.9rem 1rem;
+  color: #365a61;
+  font-weight: 800;
+  box-shadow:
+    inset 7px 7px 14px #cfd8e3,
+    inset -7px -7px 14px #ffffff;
+}
+
+.hero-selector {
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 18px;
+  background: rgba(236, 240, 243, 0.16);
+  box-shadow:
+    inset 10px 10px 24px rgba(2, 24, 29, 0.38),
+    inset -10px -10px 24px rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(22px);
+}
+
+.hero-tab {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 70px;
+  gap: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 16px;
+  background: rgba(236, 240, 243, 0.18);
+  padding: 1rem;
+  color: rgba(255, 255, 255, 0.88);
+  box-shadow:
+    inset 8px 8px 18px rgba(2, 24, 29, 0.32),
+    inset -8px -8px 18px rgba(255, 255, 255, 0.09);
+}
+
+.hero-tab-active {
+  background: #ecf0f3;
+  color: #0d3d47;
+  box-shadow:
+    inset 8px 8px 16px #cfd8e3,
+    inset -8px -8px 16px #ffffff;
+}
+
 .roadmap-ball {
   position: absolute;
   top: 0;
-  left: 26px;
+  left: 50%;
   width: 1.5rem;
   height: 1.5rem;
   border: 2px solid rgba(255, 255, 255, 0.72);
