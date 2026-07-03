@@ -6,8 +6,8 @@ import {
   ArrowRight,
   Award,
   BarChart3,
-  Boxes,
   Building2,
+  CheckCircle2,
   ClipboardCheck,
   Factory,
   FileText,
@@ -21,6 +21,7 @@ import {
   PackageCheck,
   Phone,
   Recycle,
+  Send,
   ShieldCheck,
   Sparkles,
   Truck,
@@ -31,8 +32,11 @@ import {
 gsap.registerPlugin(ScrollTrigger);
 
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
+const phone = "0563042689";
+const mapUrl = "https://maps.apple/p/U4_5vMcmMDYBYU";
 
-const heroImages = {
+const images = {
+  logo: asset("images/hero/djelong-logo-reference.jpeg"),
   gate: asset("images/hero/djelong-factory-gate.png"),
   production: asset("images/hero/paper-production-line.png"),
   logistics: asset("images/hero/paper-logistics-warehouse.png"),
@@ -43,7 +47,6 @@ const navItems = [
   { label: "À propos", path: "/a-propos" },
   { label: "Actualités", path: "/actualites" },
   { label: "Sites", path: "/sites" },
-  { label: "Produits", path: "/produits" },
   { label: "Durabilité", path: "/durabilite" },
   { label: "Investisseurs", path: "/investisseurs" },
   { label: "Contact", path: "/contact" },
@@ -51,228 +54,151 @@ const navItems = [
 
 const heroSlides = [
   {
-    image: heroImages.gate,
-    eyebrow: "Entreprise industrielle du papier",
+    image: images.gate,
+    eyebrow: "Transformation industrielle du papier",
     title: "Djelong Papiers",
-    text: "Une vitrine premium pour une entreprise réputée : transformation, fabrication, contrôle qualité et livraison de produits papier pour les professionnels.",
+    text: "Fabrication et transformation de produits en papier pour les industriels, distributeurs, collectivités et clients professionnels.",
   },
   {
-    image: heroImages.production,
-    eyebrow: "Lignes de transformation",
-    title: "Transformer la matière en produits fiables",
-    text: "Du rouleau mère aux formats finis, chaque étape est pensée pour garantir précision, régularité et finition industrielle.",
+    image: images.production,
+    eyebrow: "Production et finition",
+    title: "Des produits papier réguliers, propres et prêts à livrer",
+    text: "De la matière au format fini : découpe, façonnage, contrôle, emballage et préparation des lots avec une logique industrielle.",
   },
   {
-    image: heroImages.logistics,
-    eyebrow: "Stockage et expédition",
-    title: "Une organisation prête pour les grands volumes",
-    text: "Conditionnement, palettisation, traçabilité et préparation des commandes pour servir distributeurs, industriels et collectivités.",
-  },
-];
-
-const productFamilies = [
-  {
-    title: "Papier industriel",
-    text: "Supports destinés à la transformation, à l'intercalaire, au bobinage et aux usages techniques.",
-    icon: Factory,
-    details: ["Bobines et formats", "Intercalaires", "Papier technique", "Approvisionnement régulier"],
-  },
-  {
-    title: "Emballage papier",
-    text: "Solutions pour conditionner, protéger et présenter les produits avec une finition professionnelle.",
-    icon: PackageCheck,
-    details: ["Formats découpés", "Conditionnement propre", "Protection produit", "Présentation commerciale"],
-  },
-  {
-    title: "Produits d'hygiène",
-    text: "Gammes papier pour usages quotidiens, professionnels et collectivités, avec suivi de conformité.",
-    icon: ShieldCheck,
-    details: ["Usage professionnel", "Qualité contrôlée", "Lots suivis", "Distribution organisée"],
-  },
-  {
-    title: "Produits sur mesure",
-    text: "Formats, grammages, textures et conditionnements adaptés aux cahiers des charges clients.",
-    icon: Boxes,
-    details: ["Cahier des charges", "Grammage adapté", "Formats spéciaux", "Séries dédiées"],
+    image: images.logistics,
+    eyebrow: "Stockage et logistique",
+    title: "Une organisation pensée pour les commandes professionnelles",
+    text: "Conditionnement, palettes, étiquetage et suivi des commandes pour garder une livraison claire et maîtrisée.",
   },
 ];
 
-const expertiseBlocks = [
+const productLines = [
   {
-    title: "Transformation maîtrisée",
-    text: "Une chaîne pensée pour passer de la matière première au produit fini avec une cadence stable, des pertes réduites et une finition régulière.",
+    title: "Papier destiné à la transformation",
+    text: "Supports papier pour découpe, façonnage, intercalaires, bobinage, emballage et besoins techniques.",
     icon: Layers3,
   },
   {
-    title: "Contrôle qualité visible",
-    text: "Contrôles dimensionnels, propreté, résistance, aspect, conditionnement et traçabilité pour rassurer les acheteurs professionnels.",
+    title: "Produits papier pour professionnels",
+    text: "Articles papier destinés aux entreprises, distributeurs, administrations, commerces et usages de service.",
+    icon: PackageCheck,
+  },
+  {
+    title: "Conditionnement et formats",
+    text: "Mise en format, préparation des colis, regroupement par lots et présentation adaptée au circuit de vente.",
     icon: ClipboardCheck,
   },
   {
-    title: "Culture industrielle",
-    text: "Un positionnement clair : produire proprement, respecter les délais, documenter les lots et livrer des produits utiles au marché.",
+    title: "Demandes spécifiques",
+    text: "Étude de formats, quantités, finition, grammage et contraintes de livraison selon le cahier des charges.",
     icon: Award,
   },
-  {
-    title: "Logistique structurée",
-    text: "Préparation des palettes, étiquetage, stockage organisé et livraison planifiée selon les priorités des clients.",
-    icon: Truck,
-  },
 ];
 
-const marketBlocks = [
-  "Industries et transformateurs",
-  "Distributeurs de produits papier",
-  "Entreprises d'emballage",
-  "Collectivités et administrations",
-  "Commerce de gros",
-  "Marques à cahier des charges",
-];
-
-const qualityBlocks = [
-  { title: "Régularité", text: "Même format, même finition, même niveau de contrôle sur les séries répétées." },
-  { title: "Traçabilité", text: "Chaque lot peut être suivi depuis la matière jusqu'au conditionnement final." },
-  { title: "Présentation", text: "Des produits propres, emballés et prêts à entrer dans une chaîne de vente ou d'usage." },
-  { title: "Réactivité", text: "Une structure capable d'adapter les formats et les priorités selon les besoins clients." },
+const strengths = [
+  "Transformation industrielle du papier",
+  "Fabrication de divers produits en papiers",
+  "Préparation de lots professionnels",
+  "Conditionnement propre et régulier",
+  "Approche qualité par contrôle visuel et dimensionnel",
+  "Organisation logistique pour commandes B2B",
+  "Accompagnement des demandes sur mesure",
+  "Communication directe avec le service commercial",
 ];
 
 const roadmap = [
   {
-    title: "Sélection matière",
-    text: "Choix des papiers, fibres et consommables selon le niveau de résistance, de blancheur, de toucher et de finition attendu.",
+    title: "Réception et sélection matière",
+    text: "Contrôle de la matière entrante, vérification de l'état des bobines ou supports papier et préparation selon le produit à fabriquer.",
   },
   {
-    title: "Préparation production",
-    text: "Réglage des formats, contrôle des bobines, planification des séries et vérification des paramètres avant lancement.",
+    title: "Réglage de la série",
+    text: "Définition du format, du conditionnement, de la quantité et des paramètres de transformation avant lancement.",
   },
   {
-    title: "Transformation",
-    text: "Découpe, refente, pliage, embossage, assemblage ou conditionnement selon la famille de produit papier.",
+    title: "Transformation papier",
+    text: "Découpe, refente, façonnage, pliage, assemblage ou préparation selon la famille de produit et l'usage final.",
   },
   {
-    title: "Contrôle qualité",
-    text: "Mesures dimensionnelles, vérification visuelle, résistance, propreté, emballage et validation des lots.",
+    title: "Contrôle et tri",
+    text: "Vérification de la propreté, de l'aspect, des dimensions, de la régularité et du conditionnement avant validation.",
   },
   {
-    title: "Conditionnement",
-    text: "Mise en paquet, étiquetage, palettisation et organisation des stocks pour une expédition propre.",
+    title: "Emballage et stockage",
+    text: "Mise en paquet, étiquetage, regroupement des lots et organisation du stockage pour faciliter l'expédition.",
   },
   {
-    title: "Livraison et suivi",
-    text: "Préparation logistique, remise au client, retours d'expérience et amélioration continue des prochains lots.",
+    title: "Livraison client",
+    text: "Préparation de la commande, coordination commerciale et orientation vers l'itinéraire ou le point de retrait communiqué.",
   },
-];
-
-const commitments = [
-  { title: "Sécurité", icon: ShieldCheck, text: "Procédures d'atelier, zones maîtrisées et attention portée aux opérateurs." },
-  { title: "Environnement", icon: Leaf, text: "Réduction des pertes matière, valorisation du papier et optimisation des consommations." },
-  { title: "Qualité", icon: Award, text: "Contrôles réguliers, lots suivis et standards de finition lisibles pour les clients." },
-  { title: "Recyclabilité", icon: Recycle, text: "Orientation vers des solutions utiles, sobres et cohérentes avec les attentes du marché." },
 ];
 
 const news = [
   {
-    date: "03 Juil. 2026",
-    title: "Nouvelle vitrine digitale Djelong Papiers",
-    text: "Un site corporate pour présenter l'usine, les produits, la qualité et les engagements industriels de l'entreprise.",
+    image: images.production,
+    date: "Juillet 2026",
+    title: "Mise en avant de l'identité Djelong Papiers",
+    text: "La nouvelle présence digitale présente l'activité de transformation industrielle, les engagements qualité et les services pour clients professionnels.",
   },
   {
-    date: "18 Juin 2026",
-    title: "Renforcement des contrôles de production",
-    text: "Les équipes structurent un suivi plus lisible des lots pour les produits destinés aux professionnels.",
+    image: images.logistics,
+    date: "Juin 2026",
+    title: "Organisation commerciale et logistique",
+    text: "Djelong Papiers structure la présentation de ses services pour faciliter les demandes de prix, les commandes et les projets sur mesure.",
   },
   {
-    date: "22 Mai 2026",
-    title: "Développement de formats d'emballage",
-    text: "Djelong Papiers travaille de nouveaux formats pour les clients qui recherchent résistance, régularité et belle présentation.",
-  },
-  {
-    date: "09 Mai 2026",
-    title: "Organisation logistique améliorée",
-    text: "La préparation des palettes et le stockage sont pensés pour accélérer les livraisons sans perdre en contrôle.",
+    image: images.gate,
+    date: "Mai 2026",
+    title: "Communication autour du site industriel",
+    text: "Les pages corporate valorisent la production, le stockage, la durabilité, la qualité et les contacts utiles pour les partenaires.",
   },
 ];
 
-const innerPages = {
-  "/a-propos": {
-    icon: Building2,
-    title: "À propos de Djelong Papiers",
-    subtitle: "Une entreprise industrielle dédiée à la transformation du papier et à la fabrication de produits papier fiables.",
-    intro:
-      "Djelong Papiers doit apparaître comme une maison industrielle solide : une entreprise qui comprend la matière, la cadence, la qualité et les besoins des clients professionnels.",
-    blocks: [
-      { title: "Identité", text: "Transformation industrielle du papier, fabrication de divers produits en papiers et accompagnement des besoins professionnels." },
-      { title: "Vision", text: "Devenir une référence reconnue pour les produits papier réguliers, bien finis et livrés avec sérieux." },
-      { title: "Méthode", text: "Travailler avec des procédures claires, une lecture qualité simple et une organisation orientée client." },
-      { title: "Valeur", text: "Offrir aux acheteurs un partenaire fiable, capable de tenir les formats, les délais et la présentation produit." },
-    ],
-  },
-  "/actualites": {
-    icon: Newspaper,
-    title: "Actualités",
-    subtitle: "Une page dédiée aux annonces, améliorations industrielles, nouveaux produits et évolutions de l'entreprise.",
-    intro:
-      "Cette rubrique donne de la vie au site et montre que Djelong Papiers communique comme une entreprise active, structurée et ambitieuse.",
-    blocks: news.map((item) => ({ title: `${item.date} — ${item.title}`, text: item.text })),
-  },
-  "/sites": {
-    icon: MapPin,
-    title: "Sites industriels",
-    subtitle: "Une présentation claire des espaces de production, de contrôle, de stockage et de logistique.",
-    intro:
-      "La page sites montre l'entreprise comme une organisation complète, depuis la réception matière jusqu'à l'expédition des produits finis.",
-    blocks: [
-      { title: "Réception matière", text: "Contrôle initial des bobines, papiers, consommables et éléments nécessaires à la production." },
-      { title: "Atelier transformation", text: "Zone dédiée aux opérations de découpe, refente, façonnage, assemblage et finition." },
-      { title: "Contrôle qualité", text: "Espace de vérification pour dimensions, aspect, propreté, résistance et conformité des lots." },
-      { title: "Stockage et expédition", text: "Organisation des palettes, étiquetage, préparation et remise des commandes clients." },
-    ],
-  },
-  "/produits": {
-    icon: Boxes,
-    title: "Produits et ventes",
-    subtitle: "Une gamme claire pour parler aux distributeurs, industriels, collectivités et acheteurs professionnels.",
-    intro:
-      "Les produits sont présentés par usages pour rendre l'offre lisible : industrie, emballage, hygiène et demandes spécifiques.",
-    blocks: productFamilies.map((item) => ({ title: item.title, text: `${item.text} ${item.details.join(" · ")}.` })),
-  },
-  "/durabilite": {
-    icon: Leaf,
-    title: "Durabilité",
-    subtitle: "Une industrie papier moderne doit valoriser la matière, limiter les pertes et construire la confiance.",
-    intro:
-      "La durabilité n'est pas un slogan décoratif : elle se voit dans la sélection matière, les pertes réduites, le conditionnement et le suivi qualité.",
-    blocks: commitments.map((item) => ({ title: item.title, text: item.text })),
-  },
-  "/investisseurs": {
-    icon: BarChart3,
-    title: "Investisseurs",
-    subtitle: "Une page corporate pour présenter le potentiel industriel, la vision de croissance et les axes prioritaires.",
-    intro:
-      "Djelong Papiers peut se positionner comme une plateforme de transformation papier capable d'élargir ses gammes et de servir des marchés exigeants.",
-    blocks: [
-      { title: "Positionnement", text: "Transformation papier, emballage, produits d'hygiène, formats techniques et solutions sur mesure." },
-      { title: "Priorités", text: "Capacité, régularité, qualité mesurable, logistique plus fluide et relation client structurée." },
-      { title: "Croissance", text: "Développer les familles de produits, professionnaliser la communication et ouvrir de nouveaux marchés." },
-      { title: "Différenciation", text: "Une image industrielle premium, des process lisibles et une promesse de fiabilité." },
-    ],
-  },
-  "/contact": {
-    icon: Mail,
-    title: "Contact",
-    subtitle: "Un espace direct pour les demandes commerciales, les projets sur mesure et les partenariats.",
-    intro:
-      "La page contact doit inspirer confiance et donner envie de lancer une demande précise : format, usage, quantité, délai et exigence de finition.",
-    blocks: [
-      { title: "Demandes commerciales", text: "Présentez votre besoin : famille de produit, format, quantité estimée et délai souhaité." },
-      { title: "Projets sur mesure", text: "Djelong peut étudier un cahier des charges spécifique : grammage, texture, découpe ou emballage." },
-      { title: "Coordonnées", text: "Email : contact@djelong-papiers.dz · Téléphone : +213 000 00 00 00 · Zone industrielle, Algérie." },
-      { title: "Réponse structurée", text: "Les demandes sont orientées selon le type de produit, la faisabilité et le niveau de priorité." },
-    ],
-  },
-};
+const sustainability = [
+  { title: "Matière valorisée", text: "Limiter les pertes, mieux organiser les formats et privilégier une transformation utile.", icon: Recycle },
+  { title: "Production responsable", text: "Préparer les séries avec rigueur pour réduire les erreurs, reprises et déchets évitables.", icon: Leaf },
+  { title: "Sécurité d'atelier", text: "Présenter une culture de travail organisée autour des procédures, zones et consignes.", icon: ShieldCheck },
+  { title: "Livraison maîtrisée", text: "Limiter les ruptures de communication grâce à un contact clair et un suivi commercial direct.", icon: Truck },
+];
 
-type InnerPath = keyof typeof innerPages;
+const aboutBlocks = [
+  {
+    title: "Notre activité",
+    text: "Djelong Papiers est spécialisée dans la transformation industrielle du papier et la fabrication de divers produits en papiers destinés aux usages professionnels.",
+  },
+  {
+    title: "Notre promesse",
+    text: "Produire des articles réguliers, bien présentés et adaptés aux attentes des clients : formats, conditionnement, volumes et délais.",
+  },
+  {
+    title: "Notre méthode",
+    text: "Comprendre le besoin, préparer la série, transformer la matière, contrôler la finition, conditionner et organiser la remise ou livraison.",
+  },
+  {
+    title: "Notre relation client",
+    text: "Un contact direct, simple et commercial : téléphone, formulaire, demande de devis et lien de localisation pour faciliter l'échange.",
+  },
+];
+
+const investorBlocks = [
+  {
+    title: "Positionnement",
+    text: "Une entreprise locale orientée vers la transformation papier, les produits professionnels, les formats adaptés et la relation B2B.",
+  },
+  {
+    title: "Axes de développement",
+    text: "Renforcer la visibilité commerciale, améliorer la présentation des gammes, structurer la demande client et consolider les canaux de contact.",
+  },
+  {
+    title: "Différenciation",
+    text: "Une identité visuelle verte, associée au papier, à la feuille, à la qualité et à une image d'entreprise sérieuse.",
+  },
+  {
+    title: "Communication",
+    text: "Un site complet qui présente l'entreprise, l'actualité, les sites, la durabilité, le contact et les informations utiles aux partenaires.",
+  },
+];
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -294,16 +220,13 @@ function useScrollReveal() {
       gsap.utils.toArray<HTMLElement>(".reveal").forEach((element) => {
         gsap.fromTo(
           element,
-          { autoAlpha: 0, y: 32 },
+          { autoAlpha: 0, y: 26 },
           {
             autoAlpha: 1,
             y: 0,
-            duration: 0.8,
+            duration: 0.75,
             ease: "power3.out",
-            scrollTrigger: {
-              trigger: element,
-              start: "top 84%",
-            },
+            scrollTrigger: { trigger: element, start: "top 84%" },
           },
         );
       });
@@ -318,14 +241,12 @@ function Header() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-6">
-      <div className="mx-auto flex max-w-7xl items-center justify-between border border-white/55 bg-[rgba(236,240,243,0.78)] px-4 py-3 shadow-[0_18px_50px_rgba(10,33,42,0.16)] backdrop-blur-2xl rounded-lg">
+      <div className="mx-auto flex max-w-7xl items-center justify-between bg-white/86 px-4 py-3 shadow-[0_14px_42px_rgba(9,46,31,0.16)] backdrop-blur-2xl rounded-lg">
         <Link to="/" className="flex min-w-0 items-center gap-3" onClick={() => setOpen(false)}>
-          <span className="grid h-11 w-11 shrink-0 place-items-center bg-[#0d3d47] text-white shadow-inner rounded-lg">
-            <Factory size={22} />
-          </span>
+          <img src={images.logo} alt="Logo Djelong Papiers" className="h-12 w-12 rounded-lg object-cover" />
           <span className="min-w-0">
-            <span className="block text-base font-black text-[#092c34]">Djelong Papiers</span>
-            <span className="block text-xs text-[#517078]">Transformation industrielle</span>
+            <span className="block text-base font-black text-[#17492f]">Djelong Papiers</span>
+            <span className="block text-xs text-[#486c59]">Transformation industrielle</span>
           </span>
         </Link>
 
@@ -336,7 +257,7 @@ function Header() {
               to={item.path}
               className={({ isActive }: { isActive: boolean }) =>
                 `px-3 py-2 text-sm font-bold transition rounded-lg ${
-                  isActive ? "bg-[#0d3d47] text-white" : "text-[#244950] hover:bg-white/70 hover:text-[#0d3d47]"
+                  isActive ? "bg-[#17492f] text-white" : "text-[#274b38] hover:bg-[#e8efe9]"
                 }`
               }
             >
@@ -345,13 +266,13 @@ function Header() {
           ))}
         </nav>
 
-        <button className="soft-button grid h-11 w-11 place-items-center text-[#0d3d47] lg:hidden" onClick={() => setOpen((value) => !value)} aria-label="Ouvrir le menu">
-          {open ? <X size={22} /> : <Menu size={22} />}
+        <button className="btn-creuse grid h-11 w-11 place-items-center lg:hidden" onClick={() => setOpen((value) => !value)} aria-label="Ouvrir le menu">
+          {open ? <X size={21} /> : <Menu size={21} />}
         </button>
       </div>
 
       {open && (
-        <nav className="mx-auto mt-2 grid max-w-7xl gap-1 border border-white/50 bg-[rgba(236,240,243,0.92)] p-2 shadow-xl backdrop-blur-xl lg:hidden rounded-lg">
+        <nav className="mx-auto mt-2 grid max-w-7xl gap-1 bg-white/92 p-2 shadow-xl backdrop-blur-xl lg:hidden rounded-lg">
           {navItems.map((item) => (
             <NavLink
               key={item.path}
@@ -359,7 +280,7 @@ function Header() {
               onClick={() => setOpen(false)}
               className={({ isActive }: { isActive: boolean }) =>
                 `px-3 py-3 text-sm font-bold transition rounded-lg ${
-                  isActive ? "bg-[#0d3d47] text-white" : "text-[#244950] hover:bg-white/70"
+                  isActive ? "bg-[#17492f] text-white" : "text-[#274b38] hover:bg-[#e8efe9]"
                 }`
               }
             >
@@ -382,7 +303,7 @@ function Hero() {
   }, []);
 
   return (
-    <section className="relative min-h-[96svh] overflow-hidden bg-[#082b32] text-white">
+    <section className="relative min-h-[96svh] overflow-hidden bg-[#0b2f20] text-white">
       {heroSlides.map((item, index) => (
         <img
           key={item.image}
@@ -391,43 +312,36 @@ function Hero() {
           className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${active === index ? "opacity-100" : "opacity-0"}`}
         />
       ))}
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(4,25,30,0.94),rgba(4,25,30,0.58)_48%,rgba(4,25,30,0.18))]" />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,25,30,0.22),rgba(4,25,30,0.08)_54%,rgba(4,25,30,0.88))]" />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,30,19,0.93),rgba(5,30,19,0.62)_48%,rgba(5,30,19,0.16))]" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,30,19,0.18),rgba(5,30,19,0.1)_55%,rgba(5,30,19,0.86))]" />
 
-      <div className="relative mx-auto flex min-h-[96svh] max-w-7xl items-end px-5 pb-12 pt-32 sm:px-8 lg:pb-16">
-        <div className="grid w-full gap-8 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-end">
-          <div className="max-w-4xl">
-            <div className="reveal mb-5 inline-flex items-center gap-2 border border-white/30 bg-white/12 px-3 py-2 text-sm font-bold backdrop-blur-xl rounded-lg">
-              <Sparkles size={16} />
-              {slide.eyebrow}
-            </div>
-            <h1 className="reveal text-5xl font-black leading-[0.94] text-white sm:text-6xl lg:text-7xl">{slide.title}</h1>
-            <p className="reveal mt-6 max-w-2xl text-lg leading-8 text-white/86 sm:text-xl">{slide.text}</p>
-            <div className="reveal mt-8 flex flex-wrap gap-3">
-              <Link to="/produits" className="inline-flex items-center gap-2 bg-white px-5 py-3 font-black text-[#0d3d47] transition hover:bg-[#d7eadf] rounded-lg">
-                Voir les produits <ArrowRight size={18} />
-              </Link>
-              <Link to="/contact" className="inline-flex items-center gap-2 border border-white/45 bg-white/12 px-5 py-3 font-black text-white backdrop-blur-xl transition hover:bg-white/22 rounded-lg">
-                Lancer un projet
-              </Link>
-            </div>
+      <div className="relative mx-auto flex min-h-[96svh] max-w-7xl items-end px-5 pb-16 pt-32 sm:px-8">
+        <div className="max-w-4xl">
+          <div className="reveal mb-5 inline-flex items-center gap-2 bg-white/12 px-3 py-2 text-sm font-bold backdrop-blur-xl rounded-lg">
+            <Sparkles size={16} />
+            {slide.eyebrow}
           </div>
+          <h1 className="hero-title reveal font-black leading-[0.94] text-white">{slide.title}</h1>
+          <p className="reveal mt-6 max-w-2xl text-lg leading-8 text-white/88 sm:text-xl">{slide.text}</p>
+          <div className="reveal mt-8 flex flex-wrap gap-3">
+            <Link to="/contact" className="inline-flex items-center gap-2 bg-white px-5 py-3 font-black text-[#17492f] transition hover:bg-[#dce9dd] rounded-lg">
+              Demander un devis <ArrowRight size={18} />
+            </Link>
+            <a href={`tel:${phone}`} className="inline-flex items-center gap-2 bg-white/12 px-5 py-3 font-black text-white backdrop-blur-xl transition hover:bg-white/22 rounded-lg">
+              Appeler {phone}
+            </a>
+          </div>
+        </div>
 
-          <div className="reveal hero-selector p-4">
-            <p className="text-sm font-bold text-white/80">Hero {active + 1} / {heroSlides.length}</p>
-            <div className="mt-4 grid gap-3">
-              {heroSlides.map((item, index) => (
-                <button
-                  key={item.title}
-                  onClick={() => setActive(index)}
-                  className={`hero-tab text-left ${active === index ? "hero-tab-active" : ""}`}
-                >
-                  <span className="font-black">{item.eyebrow}</span>
-                  <span>{String(index + 1).padStart(2, "0")}</span>
-                </button>
-              ))}
-            </div>
-          </div>
+        <div className="absolute bottom-6 left-1/2 flex -translate-x-1/2 items-center gap-2">
+          {heroSlides.map((item, index) => (
+            <button
+              key={item.eyebrow}
+              aria-label={`Hero ${index + 1}`}
+              onClick={() => setActive(index)}
+              className={`hero-dot ${active === index ? "hero-dot-active" : ""}`}
+            />
+          ))}
         </div>
       </div>
     </section>
@@ -437,152 +351,85 @@ function Hero() {
 function SectionTitle({ eyebrow, title, text, dark = false }: { eyebrow: string; title: string; text: string; dark?: boolean }) {
   return (
     <div className="reveal mx-auto max-w-3xl text-center">
-      <p className="mb-3 text-sm font-black uppercase text-[#b7772b]">{eyebrow}</p>
-      <h2 className={`text-3xl font-black sm:text-5xl ${dark ? "text-white" : "text-[#0a2d35]"}`}>{title}</h2>
-      <p className={`mt-5 text-lg leading-8 ${dark ? "text-white/74" : "text-[#557179]"}`}>{text}</p>
+      <p className="mb-3 text-sm font-black uppercase text-[#2c7a4b]">{eyebrow}</p>
+      <h2 className={`text-3xl font-black sm:text-5xl ${dark ? "text-white" : "text-[#133f2a]"}`}>{title}</h2>
+      <p className={`mt-5 text-lg leading-8 ${dark ? "text-white/76" : "text-[#536a5e]"}`}>{text}</p>
     </div>
   );
 }
 
-function SoftCard({ icon: Icon, title, text, details }: { icon: LucideIcon; title: string; text: string; details?: string[] }) {
+function SoftCard({ icon: Icon, title, text }: { icon: LucideIcon; title: string; text: string }) {
   return (
-    <article className="reveal soft-card p-6">
-      <div className="mb-5 grid h-12 w-12 place-items-center bg-[#0d3d47] text-white rounded-lg">
+    <article className="reveal btn-card p-6">
+      <div className="mb-5 grid h-12 w-12 place-items-center bg-[#17492f] text-white rounded-lg">
         <Icon size={22} />
       </div>
-      <h3 className="text-2xl font-black text-[#0a2d35]">{title}</h3>
-      <p className="mt-3 leading-7 text-[#557179]">{text}</p>
-      {details && (
-        <div className="mt-5 grid gap-2">
-          {details.map((detail) => (
-            <span key={detail} className="inline-flex items-center gap-2 text-sm font-bold text-[#365a61]">
-              <CheckDot />
-              {detail}
-            </span>
-          ))}
-        </div>
-      )}
+      <h3 className="text-2xl font-black text-[#133f2a]">{title}</h3>
+      <p className="mt-3 leading-7 text-[#536a5e]">{text}</p>
     </article>
   );
 }
 
-function CheckDot() {
-  return <span className="h-2.5 w-2.5 rounded-full bg-[#d6b273] shadow-[0_0_0_4px_rgba(214,178,115,0.16)]" />;
-}
+function HomePage() {
+  useScrollReveal();
 
-function SplitShowcase() {
   return (
-    <section className="px-5 py-24 sm:px-8">
-      <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1fr_0.9fr] lg:items-center">
-        <div className="reveal overflow-hidden rounded-lg">
-          <img src={heroImages.production} alt="Ligne de transformation papier" className="h-[560px] w-full object-cover" />
+    <>
+      <Hero />
+      <section className="px-5 py-24 sm:px-8">
+        <div className="mx-auto max-w-7xl">
+          <SectionTitle
+            eyebrow="Activité"
+            title="Transformation industrielle du papier"
+            text="Djelong Papiers accompagne les besoins professionnels en transformation, fabrication, conditionnement et préparation de produits papier."
+          />
+          <div className="mt-14 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+            {productLines.map((item) => (
+              <SoftCard key={item.title} {...item} />
+            ))}
+          </div>
         </div>
-        <div className="soft-card reveal p-7">
-          <p className="text-sm font-black uppercase text-[#b7772b]">Capacité industrielle</p>
-          <h2 className="mt-3 text-4xl font-black text-[#0a2d35]">Un outil de production présenté comme une référence.</h2>
-          <p className="mt-5 leading-8 text-[#557179]">
-            L'objectif n'est pas seulement de montrer des produits. Le site doit faire sentir une entreprise sérieuse : machines,
-            flux de matière, contrôle, équipes, stockage et livraisons maîtrisées.
-          </p>
-          <div className="mt-6 grid gap-3 sm:grid-cols-2">
-            {["Formats réguliers", "Finition propre", "Lots vérifiés", "Délais structurés"].map((item) => (
-              <div key={item} className="soft-pill">
+      </section>
+
+      <section className="bg-[#133f2a] px-5 py-24 text-white sm:px-8">
+        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
+          <div className="reveal">
+            <p className="text-sm font-black uppercase text-[#a7d8ad]">Entreprise réputée</p>
+            <h2 className="mt-3 text-4xl font-black sm:text-5xl">Une image plus sérieuse, plus verte, plus industrielle.</h2>
+            <p className="mt-5 leading-8 text-white/76">
+              La charte reprend l'esprit du logo : papier, feuille, vert profond, sobriété et confiance. Le site parle aux clients qui veulent comprendre l'activité avant d'appeler.
+            </p>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {strengths.map((item) => (
+              <div key={item} className="dark-pill">
+                <CheckCircle2 size={18} />
                 {item}
               </div>
             ))}
           </div>
         </div>
-      </div>
-    </section>
-  );
-}
+      </section>
 
-function ProductSection() {
-  return (
-    <section className="bg-[#ecf0f3] px-5 py-24 sm:px-8">
-      <div className="mx-auto max-w-7xl">
-        <SectionTitle
-          eyebrow="Gamme"
-          title="Une gamme papier pensée pour l'industrie"
-          text="Des familles lisibles pour donner confiance aux acheteurs : technique, emballage, hygiène et production sur mesure."
-        />
-        <div className="mt-14 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-          {productFamilies.map((item) => (
-            <SoftCard key={item.title} {...item} />
-          ))}
+      <section className="px-5 py-24 sm:px-8">
+        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1fr_0.9fr] lg:items-center">
+          <div className="reveal overflow-hidden rounded-lg">
+            <img src={images.production} alt="Ligne de production papier Djelong" className="h-[560px] w-full object-cover" />
+          </div>
+          <div className="btn-card reveal p-7">
+            <p className="text-sm font-black uppercase text-[#2c7a4b]">Production</p>
+            <h2 className="mt-3 text-4xl font-black text-[#133f2a]">Du support papier au produit prêt à livrer.</h2>
+            <p className="mt-5 leading-8 text-[#536a5e]">
+              Réception matière, préparation de série, transformation, contrôle, conditionnement et stockage : la présentation met en avant un flux clair et crédible.
+            </p>
+          </div>
         </div>
-      </div>
-    </section>
-  );
-}
+      </section>
 
-function ExpertiseSection() {
-  return (
-    <section className="px-5 py-24 sm:px-8">
-      <div className="mx-auto max-w-7xl">
-        <SectionTitle
-          eyebrow="Savoir-faire"
-          title="Tout le site doit respirer l'entreprise réputée"
-          text="Des blocs forts, concrets, avec des cadres creusés qui suivent le fond et donnent une sensation premium, industrielle et propre."
-        />
-        <div className="mt-14 grid gap-6 md:grid-cols-2">
-          {expertiseBlocks.map((item) => (
-            <SoftCard key={item.title} {...item} />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function MarketSection() {
-  return (
-    <section className="bg-[#0d3d47] px-5 py-24 text-white sm:px-8">
-      <div className="mx-auto max-w-7xl">
-        <SectionTitle
-          eyebrow="Marchés servis"
-          title="Une offre qui parle aux vrais acheteurs"
-          text="Le site explique à qui Djelong s'adresse, pas seulement ce qu'elle fabrique."
-          dark
-        />
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {marketBlocks.map((item, index) => (
-            <article key={item} className="reveal soft-card-dark p-6">
-              <p className="text-sm font-black text-[#d6b273]">{String(index + 1).padStart(2, "0")}</p>
-              <h3 className="mt-4 text-2xl font-black">{item}</h3>
-              <p className="mt-3 leading-7 text-white/72">
-                Une présentation claire, professionnelle et rassurante pour ouvrir la discussion commerciale.
-              </p>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function QualitySection() {
-  return (
-    <section className="px-5 py-24 sm:px-8">
-      <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
-        <div className="soft-card reveal p-7">
-          <p className="text-sm font-black uppercase text-[#b7772b]">Qualité</p>
-          <h2 className="mt-3 text-4xl font-black text-[#0a2d35]">Ce que le client doit sentir immédiatement.</h2>
-          <p className="mt-5 leading-8 text-[#557179]">
-            Djelong Papiers doit donner une impression de maîtrise : pas un simple catalogue, mais une entreprise capable de produire,
-            documenter, contrôler et livrer.
-          </p>
-        </div>
-        <div className="grid gap-5 sm:grid-cols-2">
-          {qualityBlocks.map((item) => (
-            <article key={item.title} className="reveal soft-card p-6">
-              <h3 className="text-2xl font-black text-[#0a2d35]">{item.title}</h3>
-              <p className="mt-3 leading-7 text-[#557179]">{item.text}</p>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
+      <RoadmapBlock />
+      <NewsPreview />
+      <ContactSection />
+    </>
   );
 }
 
@@ -622,16 +469,15 @@ function RoadmapBlock() {
   }, []);
 
   return (
-    <section id="processus" className="relative overflow-hidden bg-[#ecf0f3] px-5 py-24 sm:px-8">
+    <section className="bg-[#ecf0f3] px-5 py-24 sm:px-8">
       <div className="mx-auto max-w-7xl">
         <SectionTitle
-          eyebrow="Processus industriel"
+          eyebrow="Processus"
           title="La trajectoire Djelong"
-          text="Une ligne dessinée au scroll, mais avec des cartes alternées gauche/droite pour raconter la transformation comme un vrai parcours premium."
+          text="Un parcours clair depuis la matière jusqu'à la livraison, avec les cartes de droite volontairement plus éloignées pour respirer."
         />
-
         <div ref={containerRef} className="relative mt-16">
-          <div className="pointer-events-none absolute left-1/2 top-0 hidden h-full w-16 -translate-x-1/2 text-[#d6b273] lg:block">
+          <div className="pointer-events-none absolute left-1/2 top-0 hidden h-full w-16 -translate-x-1/2 text-[#2c7a4b] lg:block">
             <div ref={ballRef} className="roadmap-ball" />
             <svg viewBox="0 0 52 2047" fill="none" className="h-full w-full">
               <path
@@ -643,14 +489,13 @@ function RoadmapBlock() {
               />
             </svg>
           </div>
-
           <div className="grid gap-8">
             {roadmap.map((item, index) => (
-              <article key={item.title} className={`reveal grid lg:grid-cols-2 ${index % 2 === 0 ? "" : "lg:[&>div]:col-start-2"}`}>
-                <div className="soft-card p-6 lg:w-[92%]">
-                  <p className="text-sm font-black text-[#b7772b]">{String(index + 1).padStart(2, "0")}</p>
-                  <h3 className="mt-3 text-2xl font-black text-[#0a2d35]">{item.title}</h3>
-                  <p className="mt-3 leading-8 text-[#557179]">{item.text}</p>
+              <article key={item.title} className={`reveal grid lg:grid-cols-2 ${index % 2 === 0 ? "lg:pr-20" : "lg:pl-32"}`}>
+                <div className={`btn-card p-6 ${index % 2 === 0 ? "lg:w-[86%]" : "lg:col-start-2 lg:ml-auto lg:w-[86%]"}`}>
+                  <p className="text-sm font-black text-[#2c7a4b]">{String(index + 1).padStart(2, "0")}</p>
+                  <h3 className="mt-3 text-2xl font-black text-[#133f2a]">{item.title}</h3>
+                  <p className="mt-3 leading-8 text-[#536a5e]">{item.text}</p>
                 </div>
               </article>
             ))}
@@ -661,50 +506,24 @@ function RoadmapBlock() {
   );
 }
 
-function SustainabilityPreview() {
-  return (
-    <section className="px-5 py-24 sm:px-8">
-      <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1fr_1fr] lg:items-center">
-        <div className="reveal overflow-hidden rounded-lg">
-          <img src={heroImages.logistics} alt="Stockage et logistique des produits papier" className="h-[540px] w-full object-cover" />
-        </div>
-        <div>
-          <SectionTitle
-            eyebrow="Durabilité"
-            title="Une production utile, propre et mieux organisée"
-            text="La durabilité est intégrée dans les choix de matière, les pertes réduites, le conditionnement et la rigueur logistique."
-          />
-          <div className="mt-8 grid gap-4 sm:grid-cols-2">
-            {commitments.map((item) => (
-              <SoftCard key={item.title} {...item} />
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function NewsPreview() {
   return (
-    <section className="bg-[#ecf0f3] px-5 py-24 sm:px-8">
+    <section className="px-5 py-24 sm:px-8">
       <div className="mx-auto max-w-7xl">
-        <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-          <SectionTitle
-            eyebrow="Actualités"
-            title="Un fil d'information qui remplit le site"
-            text="Actualités produits, qualité, production et organisation : le site devient vivant et crédible."
-          />
-          <Link to="/actualites" className="soft-button reveal inline-flex items-center justify-center gap-2 px-5 py-3 font-black text-[#0d3d47]">
-            Toutes les actualités <ArrowRight size={18} />
-          </Link>
-        </div>
-        <div className="mt-12 grid gap-5 lg:grid-cols-4">
+        <SectionTitle
+          eyebrow="Actualités"
+          title="Actualités de l'entreprise"
+          text="Des cartes simples, professionnelles, illustrées et orientées communication corporate."
+        />
+        <div className="mt-12 grid gap-6 lg:grid-cols-3">
           {news.map((item) => (
-            <article key={item.title} className="reveal soft-card p-6">
-              <p className="text-sm font-black text-[#b7772b]">{item.date}</p>
-              <h3 className="mt-4 text-xl font-black text-[#0a2d35]">{item.title}</h3>
-              <p className="mt-4 leading-7 text-[#557179]">{item.text}</p>
+            <article key={item.title} className="reveal overflow-hidden bg-white shadow-[0_16px_42px_rgba(19,63,42,0.12)] rounded-lg">
+              <img src={item.image} alt="" className="h-56 w-full object-cover" />
+              <div className="p-6">
+                <p className="text-sm font-black text-[#2c7a4b]">{item.date}</p>
+                <h3 className="mt-3 text-2xl font-black text-[#133f2a]">{item.title}</h3>
+                <p className="mt-3 leading-7 text-[#536a5e]">{item.text}</p>
+              </div>
             </article>
           ))}
         </div>
@@ -713,92 +532,173 @@ function NewsPreview() {
   );
 }
 
-function ContactBand() {
+function ContactSection() {
   return (
-    <section className="px-5 py-20 sm:px-8">
-      <div className="reveal mx-auto grid max-w-7xl gap-8 bg-[#0d3d47] p-6 text-white shadow-[0_25px_80px_rgba(13,61,71,0.22)] md:grid-cols-[1fr_auto] md:items-center md:p-10 rounded-lg">
-        <div>
-          <p className="font-black text-[#d6b273]">Projet papier, emballage ou transformation ?</p>
-          <h2 className="mt-3 text-3xl font-black sm:text-4xl">Présentez Djelong comme une entreprise prête pour les grands comptes.</h2>
+    <section className="bg-[#dfe7e1] px-5 py-24 sm:px-8">
+      <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1.05fr_0.95fr]">
+        <div className="reveal">
+          <p className="text-sm font-black uppercase text-[#2c7a4b]">Contact</p>
+          <h2 className="mt-3 text-4xl font-black text-[#133f2a]">Demande commerciale ou projet sur mesure</h2>
+          <p className="mt-5 leading-8 text-[#536a5e]">
+            Envoyez le type de produit papier recherché, la quantité estimée, le format, l'usage et le délai. L'équipe Djelong Papiers peut revenir vers vous pour clarifier la demande.
+          </p>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+            <a href={`tel:${phone}`} className="btn-card p-5 font-black text-[#133f2a]">
+              <Phone className="mb-3" />
+              {phone}
+            </a>
+            <a href={mapUrl} target="_blank" rel="noreferrer" className="btn-card p-5 font-black text-[#133f2a]">
+              <MapPin className="mb-3" />
+              Ouvrir Apple Maps
+            </a>
+          </div>
+          <div className="map-panel mt-6">
+            <MapPin size={34} />
+            <div>
+              <p className="font-black">Localisation Djelong Papiers</p>
+              <p className="text-sm text-white/76">Lien officiel fourni par l'entreprise via Apple Maps.</p>
+            </div>
+          </div>
         </div>
-        <Link to="/contact" className="inline-flex items-center justify-center gap-2 bg-white px-5 py-3 font-black text-[#0d3d47] rounded-lg">
-          Demander un devis <ArrowRight size={18} />
-        </Link>
+
+        <form className="reveal bg-white p-6 shadow-[0_18px_46px_rgba(19,63,42,0.14)] rounded-lg" action="mailto:contact@djelong-papiers.dz" method="post" encType="text/plain">
+          <div className="grid gap-4">
+            <label className="grid gap-2 text-sm font-black text-[#133f2a]">
+              Nom et entreprise
+              <input name="Nom et entreprise" required className="form-field" placeholder="Votre nom / société" />
+            </label>
+            <label className="grid gap-2 text-sm font-black text-[#133f2a]">
+              Téléphone
+              <input name="Téléphone" required className="form-field" placeholder="Votre numéro" />
+            </label>
+            <label className="grid gap-2 text-sm font-black text-[#133f2a]">
+              Type de besoin
+              <select name="Type de besoin" className="form-field">
+                <option>Transformation papier</option>
+                <option>Produits papier professionnels</option>
+                <option>Conditionnement</option>
+                <option>Demande sur mesure</option>
+              </select>
+            </label>
+            <label className="grid gap-2 text-sm font-black text-[#133f2a]">
+              Message
+              <textarea name="Message" required rows={6} className="form-field" placeholder="Formats, quantités, délai, usage..." />
+            </label>
+            <button className="inline-flex items-center justify-center gap-2 bg-[#17492f] px-5 py-3 font-black text-white rounded-lg">
+              Envoyer la demande <Send size={18} />
+            </button>
+          </div>
+        </form>
       </div>
     </section>
   );
 }
 
-function HomePage() {
+function AboutPage() {
   useScrollReveal();
-
   return (
     <>
-      <Hero />
-      <ExpertiseSection />
-      <ProductSection />
-      <SplitShowcase />
-      <MarketSection />
-      <QualitySection />
-      <RoadmapBlock />
-      <SustainabilityPreview />
-      <NewsPreview />
-      <ContactBand />
-    </>
-  );
-}
-
-function InnerPage({ path }: { path: InnerPath }) {
-  useScrollReveal();
-  const page = innerPages[path];
-  const Icon = page.icon;
-
-  return (
-    <>
-      <section className="relative min-h-[62svh] overflow-hidden bg-[#082b32] px-5 pb-16 pt-36 text-white sm:px-8">
-        <img src={path === "/sites" || path === "/contact" ? heroImages.logistics : path === "/produits" ? heroImages.production : heroImages.gate} alt="" className="absolute inset-0 h-full w-full object-cover opacity-48" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(4,25,30,0.94),rgba(4,25,30,0.62))]" />
-        <div className="relative mx-auto max-w-7xl">
-          <div className="reveal grid h-14 w-14 place-items-center border border-white/24 bg-white/12 backdrop-blur-xl rounded-lg">
-            <Icon size={26} />
-          </div>
-          <h1 className="reveal mt-6 max-w-4xl text-4xl font-black sm:text-6xl">{page.title}</h1>
-          <p className="reveal mt-6 max-w-3xl text-lg leading-8 text-white/78">{page.subtitle}</p>
-        </div>
-      </section>
-
+      <PageHero title="À propos de Djelong Papiers" subtitle="Une entreprise de transformation industrielle du papier avec une identité claire, verte et professionnelle." image={images.logo} icon={Building2} />
       <section className="px-5 py-20 sm:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="reveal soft-card p-7">
-            <p className="text-sm font-black uppercase text-[#b7772b]">Djelong Papiers</p>
-            <h2 className="mt-3 text-3xl font-black text-[#0a2d35]">Une page complète, claire et orientée client.</h2>
-            <p className="mt-4 max-w-4xl leading-8 text-[#557179]">{page.intro}</p>
+        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="btn-card reveal p-7">
+            <p className="text-sm font-black uppercase text-[#2c7a4b]">Message du PDG</p>
+            <h2 className="mt-3 text-4xl font-black text-[#133f2a]">“Notre ambition est de faire de Djelong Papiers un partenaire fiable pour chaque client professionnel.”</h2>
+            <p className="mt-5 leading-8 text-[#536a5e]">
+              Chez Djelong Papiers, nous croyons qu'un produit papier réussi commence par une matière bien choisie, une transformation maîtrisée et une relation client directe. Notre objectif est simple : livrer des produits réguliers, propres et adaptés aux besoins du marché.
+            </p>
+            <p className="mt-5 font-black text-[#17492f]">Direction générale — Djelong Papiers</p>
           </div>
-          <div className="mt-8 grid gap-5 md:grid-cols-2">
-            {page.blocks.map((block, index) => (
-              <article key={block.title} className="reveal soft-card p-6">
-                <p className="text-sm font-black text-[#b7772b]">{String(index + 1).padStart(2, "0")}</p>
-                <h3 className="mt-3 text-2xl font-black text-[#0a2d35]">{block.title}</h3>
-                <p className="mt-3 leading-8 text-[#557179]">{block.text}</p>
+          <div className="grid gap-5 sm:grid-cols-2">
+            {aboutBlocks.map((item) => (
+              <article key={item.title} className="btn-card reveal p-6">
+                <h3 className="text-2xl font-black text-[#133f2a]">{item.title}</h3>
+                <p className="mt-3 leading-7 text-[#536a5e]">{item.text}</p>
               </article>
             ))}
           </div>
         </div>
       </section>
+    </>
+  );
+}
 
-      {path === "/produits" && <ProductSection />}
-      {path === "/actualites" && <NewsPreview />}
-      {path === "/durabilite" && <SustainabilityPreview />}
-      {path === "/contact" && (
-        <section className="px-5 pb-20 sm:px-8">
-          <div className="mx-auto grid max-w-7xl gap-5 md:grid-cols-3">
-            <SoftCard icon={Phone} title="Téléphone" text="+213 000 00 00 00" />
-            <SoftCard icon={Mail} title="Email" text="contact@djelong-papiers.dz" />
-            <SoftCard icon={Globe2} title="Web" text="renolix.github.io/djelong.github.io" />
-          </div>
-        </section>
-      )}
-      <ContactBand />
+function PageHero({ title, subtitle, image, icon: Icon }: { title: string; subtitle: string; image: string; icon: LucideIcon }) {
+  return (
+    <section className="relative min-h-[60svh] overflow-hidden bg-[#0b2f20] px-5 pb-16 pt-36 text-white sm:px-8">
+      <img src={image} alt="" className="absolute inset-0 h-full w-full object-cover opacity-44" />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,30,19,0.94),rgba(5,30,19,0.64))]" />
+      <div className="relative mx-auto max-w-7xl">
+        <div className="reveal grid h-14 w-14 place-items-center bg-white/12 backdrop-blur-xl rounded-lg">
+          <Icon size={26} />
+        </div>
+        <h1 className="reveal mt-6 max-w-4xl text-4xl font-black sm:text-6xl">{title}</h1>
+        <p className="reveal mt-6 max-w-3xl text-lg leading-8 text-white/78">{subtitle}</p>
+      </div>
+    </section>
+  );
+}
+
+function SimplePage({ type }: { type: "actualites" | "sites" | "durabilite" | "investisseurs" | "contact" }) {
+  useScrollReveal();
+  if (type === "actualites") {
+    return (
+      <>
+        <PageHero title="Actualités" subtitle="La communication officielle de Djelong Papiers : production, organisation, qualité et relation client." image={images.logistics} icon={Newspaper} />
+        <NewsPreview />
+      </>
+    );
+  }
+  if (type === "contact") {
+    return (
+      <>
+        <PageHero title="Contact" subtitle="Un formulaire clair, un téléphone direct et un lien Apple Maps pour localiser l'entreprise." image={images.gate} icon={Mail} />
+        <ContactSection />
+      </>
+    );
+  }
+  const pageData = {
+    sites: {
+      title: "Sites et organisation",
+      subtitle: "Présentation des zones clés : réception matière, production, contrôle, stockage et expédition.",
+      image: images.logistics,
+      icon: MapPin,
+      blocks: [
+        ["Réception matière", "Préparation et vérification des supports papier avant transformation."],
+        ["Atelier de transformation", "Zone dédiée aux opérations de découpe, façonnage, préparation et conditionnement."],
+        ["Contrôle", "Vérification de l'aspect, des dimensions, de la propreté et de la conformité de présentation."],
+        ["Expédition", "Préparation des lots, palettes et commandes destinées aux clients professionnels."],
+      ],
+    },
+    durabilite: {
+      title: "Durabilité",
+      subtitle: "Une logique plus responsable : valoriser la matière, limiter les pertes et améliorer l'organisation.",
+      image: images.production,
+      icon: Leaf,
+      blocks: sustainability.map((item) => [item.title, item.text]),
+    },
+    investisseurs: {
+      title: "Investisseurs et partenaires",
+      subtitle: "Une lecture corporate pour comprendre le positionnement, les axes de croissance et la vision Djelong.",
+      image: images.logo,
+      icon: BarChart3,
+      blocks: investorBlocks.map((item) => [item.title, item.text]),
+    },
+  }[type];
+
+  return (
+    <>
+      <PageHero title={pageData.title} subtitle={pageData.subtitle} image={pageData.image} icon={pageData.icon} />
+      <section className="px-5 py-20 sm:px-8">
+        <div className="mx-auto grid max-w-7xl gap-5 md:grid-cols-2">
+          {pageData.blocks.map(([title, text]) => (
+            <article key={title} className="btn-card reveal p-6">
+              <h3 className="text-2xl font-black text-[#133f2a]">{title}</h3>
+              <p className="mt-3 leading-8 text-[#536a5e]">{text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
     </>
   );
 }
@@ -807,10 +707,9 @@ function NotFound() {
   return (
     <main className="grid min-h-screen place-items-center px-5 text-center">
       <div>
-        <FileText className="mx-auto text-[#0d3d47]" size={48} />
-        <h1 className="mt-5 text-4xl font-black text-[#0a2d35]">Page introuvable</h1>
-        <p className="mt-3 text-[#557179]">Cette page n'existe pas encore sur le site Djelong Papiers.</p>
-        <Link to="/" className="mt-6 inline-flex items-center gap-2 bg-[#0d3d47] px-5 py-3 font-black text-white rounded-lg">
+        <FileText className="mx-auto text-[#17492f]" size={48} />
+        <h1 className="mt-5 text-4xl font-black text-[#133f2a]">Page introuvable</h1>
+        <Link to="/" className="mt-6 inline-flex items-center gap-2 bg-[#17492f] px-5 py-3 font-black text-white rounded-lg">
           Retour accueil <ArrowRight size={18} />
         </Link>
       </div>
@@ -820,29 +719,45 @@ function NotFound() {
 
 function Footer() {
   return (
-    <footer className="border-t border-[#d9e6e4] bg-[#ecf0f3] px-5 py-10 sm:px-8">
-      <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1fr_1.2fr]">
+    <footer className="bg-[#0b2f20] px-5 py-14 text-white sm:px-8">
+      <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.2fr_0.8fr_0.8fr_1fr]">
         <div>
-          <div className="flex items-center gap-3">
-            <span className="grid h-11 w-11 place-items-center bg-[#0d3d47] text-white rounded-lg">
-              <Factory size={22} />
-            </span>
-            <div>
-              <p className="font-black text-[#0a2d35]">Djelong Papiers</p>
-              <p className="text-sm text-[#607980]">Transformation industrielle du papier</p>
-            </div>
-          </div>
-          <p className="mt-5 max-w-lg leading-7 text-[#557179]">
-            Fabrication de divers produits en papiers, solutions industrielles, emballage, qualité et durabilité.
+          <img src={images.logo} alt="Djelong Papiers" className="h-20 w-32 rounded-lg object-cover" />
+          <p className="mt-5 max-w-md leading-7 text-white/74">
+            Transformation industrielle du papier et fabrication de divers produits en papiers pour clients professionnels.
           </p>
         </div>
-        <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-4">
-          {navItems.slice(1).map((item) => (
-            <Link key={item.path} to={item.path} className="text-sm font-bold text-[#395a62] hover:text-[#0d3d47]">
-              {item.label}
-            </Link>
-          ))}
+        <div>
+          <h3 className="font-black">Navigation</h3>
+          <div className="mt-4 grid gap-2">
+            {navItems.map((item) => (
+              <Link key={item.path} to={item.path} className="text-white/72 hover:text-white">
+                {item.label}
+              </Link>
+            ))}
+          </div>
         </div>
+        <div>
+          <h3 className="font-black">Activités</h3>
+          <div className="mt-4 grid gap-2 text-white/72">
+            <span>Transformation papier</span>
+            <span>Conditionnement</span>
+            <span>Produits professionnels</span>
+            <span>Demandes sur mesure</span>
+          </div>
+        </div>
+        <div>
+          <h3 className="font-black">Contact</h3>
+          <div className="mt-4 grid gap-3 text-white/72">
+            <a href={`tel:${phone}`} className="hover:text-white">{phone}</a>
+            <a href={mapUrl} target="_blank" rel="noreferrer" className="hover:text-white">Apple Maps</a>
+            <span>Djelong Papiers</span>
+          </div>
+        </div>
+      </div>
+      <div className="mx-auto mt-10 flex max-w-7xl flex-col justify-between gap-3 border-t border-white/12 pt-6 text-sm text-white/56 md:flex-row">
+        <span>© 2026 Djelong Papiers. Tous droits réservés.</span>
+        <span>Site corporate React + GitHub Pages.</span>
       </div>
     </footer>
   );
@@ -855,9 +770,12 @@ function AppRoutes() {
       <Header />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        {(Object.keys(innerPages) as InnerPath[]).map((path) => (
-          <Route key={path} path={path} element={<InnerPage path={path} />} />
-        ))}
+        <Route path="/a-propos" element={<AboutPage />} />
+        <Route path="/actualites" element={<SimplePage type="actualites" />} />
+        <Route path="/sites" element={<SimplePage type="sites" />} />
+        <Route path="/durabilite" element={<SimplePage type="durabilite" />} />
+        <Route path="/investisseurs" element={<SimplePage type="investisseurs" />} />
+        <Route path="/contact" element={<SimplePage type="contact" />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
