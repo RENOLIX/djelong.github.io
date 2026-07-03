@@ -1,0 +1,15 @@
+{
+  "name": "Djelong Papiers",
+  "short_name": "Djelong",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f8f6",
+  "theme_color": "#0d3d47",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
