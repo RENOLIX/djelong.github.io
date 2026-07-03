@@ -64,7 +64,248 @@ img {
 }
 
 .reveal {
+  opacity: 1;
+}
+
+.site-header {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 50;
+}
+
+.top-band {
+  width: 100%;
+  color: #f3fbf5;
+  background: linear-gradient(90deg, #071d14, #0b2f20 52%, #17492f);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.top-band-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 80rem;
+  min-height: 56px;
+  padding: 0.4rem 1.25rem;
+  margin: 0 auto;
+}
+
+.top-contact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.7rem;
+}
+
+.top-contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.83rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.top-contact-link:hover {
+  color: white;
+  transform: translateY(-1px);
+}
+
+.main-header {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid rgba(23, 73, 47, 0.12);
+  box-shadow: 0 14px 34px rgba(9, 46, 31, 0.12);
+  backdrop-filter: blur(22px);
+}
+
+.main-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 80rem;
+  padding: 0.85rem 1.25rem;
+  margin: 0 auto;
+}
+
+.mobile-nav {
+  display: grid;
+  gap: 0.25rem;
+  width: 100%;
+  padding: 0.55rem 1.25rem 0.8rem;
+  background: rgba(255, 255, 255, 0.96);
+  border-bottom: 1px solid rgba(23, 73, 47, 0.12);
+  box-shadow: 0 18px 32px rgba(9, 46, 31, 0.13);
+  backdrop-filter: blur(20px);
+}
+
+.gooey-search {
+  position: relative;
+  z-index: 3;
+  width: 260px;
+  height: 44px;
+}
+
+.gooey-filter {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.gooey-inner {
+  position: relative;
+  width: 260px;
+  height: 44px;
+  filter: url("#gooey-search-filter");
+}
+
+.gooey-button,
+.gooey-icon,
+.gooey-result {
+  color: #eaf4ec;
+  background: #050807;
+  border: 0;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.gooey-button {
+  position: absolute;
+  top: 1px;
+  left: 0;
+  width: 104px;
+  height: 42px;
+  padding: 0 1.15rem;
+  overflow: hidden;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 900;
+  text-align: left;
+  transition:
+    width 0.58s cubic-bezier(0.68, -0.2, 0.25, 1.2),
+    transform 0.58s cubic-bezier(0.68, -0.2, 0.25, 1.2);
+}
+
+.gooey-search.is-open .gooey-button {
+  width: 224px;
+  transform: translateX(-12px);
+}
+
+.gooey-label {
+  display: inline-block;
+  padding-left: 0.15rem;
+}
+
+.gooey-input {
+  width: 100%;
+  height: 100%;
+  padding: 0 2.2rem 0 0.35rem;
+  color: #f6fbf7;
+  background: transparent;
+  border: 0;
+  outline: none;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.gooey-input::placeholder {
+  color: rgba(255, 255, 255, 0.58);
+}
+
+.gooey-icon {
+  position: absolute;
+  top: 1px;
+  right: 18px;
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 999px;
+  transition:
+    transform 0.5s cubic-bezier(0.68, -0.2, 0.25, 1.2),
+    background 0.2s ease;
+}
+
+.gooey-search.is-open .gooey-icon {
+  transform: translateX(12px) rotate(8deg);
+}
+
+.gooey-icon:hover {
+  background: #102318;
+}
+
+.gooey-results {
+  position: absolute;
+  top: 0;
+  left: 2px;
+  z-index: -1;
+}
+
+.gooey-result {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 175px;
+  min-height: 37px;
+  padding: 0.65rem 1rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 900;
+  white-space: nowrap;
   opacity: 0;
+  transform: translateY(0) scale(0.88);
+  animation: gooey-result-in 0.46s cubic-bezier(0.2, 0.9, 0.2, 1.2) forwards;
+}
+
+.gooey-result:hover {
+  color: white;
+  background: #17492f;
+}
+
+@keyframes gooey-result-in {
+  to {
+    opacity: 1;
+    transform: translateY(var(--result-offset)) scale(1);
+  }
+}
+
+@media (max-width: 760px) {
+  .top-band-inner {
+    align-items: flex-start;
+    min-height: 86px;
+    padding: 0.5rem 1rem;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .top-contact {
+    width: 100%;
+    justify-content: space-between;
+    gap: 0.35rem;
+  }
+
+  .top-contact-link {
+    font-size: 0.74rem;
+  }
+
+  .main-header-inner {
+    padding: 0.7rem 1rem;
+  }
+
+  .gooey-search,
+  .gooey-inner {
+    width: 238px;
+  }
+
+  .gooey-search.is-open .gooey-button {
+    width: 204px;
+  }
 }
 
 .btn-creuse,

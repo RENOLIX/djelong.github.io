@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { BrowserRouter, Link, NavLink, Route, Routes, useLocation } from "react-router-dom";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
@@ -21,6 +21,7 @@ import {
   PackageCheck,
   Phone,
   Recycle,
+  Search,
   Send,
   ShieldCheck,
   Sparkles,
@@ -33,6 +34,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 const phone = "0563042689";
+const contactEmail = "contact@djelong-papiers.dz";
 const mapUrl = "https://maps.apple/p/U4_5vMcmMDYBYU";
 
 const images = {
@@ -50,6 +52,18 @@ const navItems = [
   { label: "Durabilité", path: "/durabilite" },
   { label: "Investisseurs", path: "/investisseurs" },
   { label: "Contact", path: "/contact" },
+];
+
+const searchItems = [
+  { label: "Accueil", path: "/" },
+  { label: "A propos", path: "/a-propos" },
+  { label: "Actualites", path: "/actualites" },
+  { label: "Sites industriels", path: "/sites" },
+  { label: "Durabilite", path: "/durabilite" },
+  { label: "Investisseurs", path: "/investisseurs" },
+  { label: "Contact et devis", path: "/contact" },
+  { label: "Processus de transformation", path: "/#processus" },
+  { label: "Gamme papier industrie", path: "/#gammes" },
 ];
 
 const heroSlides = [
@@ -215,9 +229,14 @@ function ScrollToTop() {
 }
 
 function useScrollReveal() {
+  const location = useLocation();
+
   useEffect(() => {
     const context = gsap.context(() => {
-      gsap.utils.toArray<HTMLElement>(".reveal").forEach((element) => {
+      const elements = gsap.utils.toArray<HTMLElement>(".reveal");
+      gsap.set(elements, { autoAlpha: 1 });
+
+      elements.forEach((element) => {
         gsap.fromTo(
           element,
           { autoAlpha: 0, y: 26 },
@@ -230,49 +249,151 @@ function useScrollReveal() {
           },
         );
       });
+
+      window.setTimeout(() => ScrollTrigger.refresh(), 80);
     });
 
     return () => context.revert();
-  }, []);
+  }, [location.pathname]);
+}
+
+function GooeySearch() {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const cleanQuery = query.trim().toLowerCase();
+  const results = (cleanQuery ? searchItems.filter((item) => item.label.toLowerCase().includes(cleanQuery)) : searchItems).slice(0, 4);
+
+  useEffect(() => {
+    if (open) inputRef.current?.focus();
+  }, [open]);
+
+  return (
+    <div className={`gooey-search ${open ? "is-open" : ""}`}>
+      <svg className="gooey-filter" aria-hidden="true">
+        <defs>
+          <filter id="gooey-search-filter">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="7" result="blur" />
+            <feColorMatrix
+              in="blur"
+              mode="matrix"
+              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -8"
+              result="goo"
+            />
+            <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+          </filter>
+        </defs>
+      </svg>
+
+      <div className="gooey-inner">
+        <div className="gooey-results" aria-hidden={!open}>
+          {open &&
+            results.map((item, index) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className="gooey-result"
+                style={{ "--result-offset": `${(index + 1) * 45}px` } as CSSProperties}
+                onClick={() => {
+                  setOpen(false);
+                  setQuery("");
+                }}
+              >
+                {item.label}
+              </Link>
+            ))}
+        </div>
+
+        <button type="button" className="gooey-button" onClick={() => setOpen(true)} aria-label="Rechercher dans le site">
+          {open ? (
+            <input
+              ref={inputRef}
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              onClick={(event) => event.stopPropagation()}
+              className="gooey-input"
+              placeholder="Rechercher"
+              aria-label="Rechercher"
+            />
+          ) : (
+            <span className="gooey-label">Search</span>
+          )}
+        </button>
+
+        <button
+          type="button"
+          className="gooey-icon"
+          aria-label={open ? "Fermer la recherche" : "Ouvrir la recherche"}
+          onClick={() => {
+            if (open && query) {
+              setQuery("");
+              return;
+            }
+            setOpen((value) => !value);
+          }}
+        >
+          <Search size={18} strokeWidth={2.6} />
+        </button>
+      </div>
+    </div>
+  );
 }
 
 function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-6">
-      <div className="mx-auto flex max-w-7xl items-center justify-between bg-white/86 px-4 py-3 shadow-[0_14px_42px_rgba(9,46,31,0.16)] backdrop-blur-2xl rounded-lg">
-        <Link to="/" className="flex min-w-0 items-center gap-3" onClick={() => setOpen(false)}>
-          <img src={images.logo} alt="Logo Djelong Papiers" className="h-12 w-12 rounded-lg object-cover" />
-          <span className="min-w-0">
-            <span className="block text-base font-black text-[#17492f]">Djelong Papiers</span>
-            <span className="block text-xs text-[#486c59]">Transformation industrielle</span>
-          </span>
-        </Link>
+    <header className="site-header">
+      <div className="top-band">
+        <div className="top-band-inner">
+          <GooeySearch />
+          <div className="top-contact">
+            <a href={`mailto:${contactEmail}`} className="top-contact-link">
+              <Mail size={16} />
+              {contactEmail}
+            </a>
+            <a href={`tel:${phone}`} className="top-contact-link">
+              <Phone size={16} />
+              {phone}
+            </a>
+          </div>
+        </div>
+      </div>
 
-        <nav className="hidden items-center gap-1 lg:flex">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              className={({ isActive }: { isActive: boolean }) =>
-                `px-3 py-2 text-sm font-bold transition rounded-lg ${
-                  isActive ? "bg-[#17492f] text-white" : "text-[#274b38] hover:bg-[#e8efe9]"
-                }`
-              }
-            >
-              {item.label}
-            </NavLink>
-          ))}
-        </nav>
+      <div className="main-header">
+        <div className="main-header-inner">
+          <Link to="/" className="flex min-w-0 items-center gap-3" onClick={() => setOpen(false)}>
+            <img src={images.logo} alt="Logo Djelong Papiers" className="h-12 w-12 rounded-lg object-cover" />
+            <span className="min-w-0">
+              <span className="block text-base font-black text-[#17492f]">Djelong Papiers</span>
+              <span className="block text-xs text-[#486c59]">Transformation industrielle</span>
+            </span>
+          </Link>
 
-        <button className="btn-creuse grid h-11 w-11 place-items-center lg:hidden" onClick={() => setOpen((value) => !value)} aria-label="Ouvrir le menu">
-          {open ? <X size={21} /> : <Menu size={21} />}
-        </button>
+          <nav className="hidden items-center gap-1 lg:flex">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={({ isActive }: { isActive: boolean }) =>
+                  `px-3 py-2 text-sm font-bold transition rounded-lg ${
+                    isActive ? "bg-[#17492f] text-white" : "text-[#274b38] hover:bg-[#e8efe9]"
+                  }`
+                }
+              >
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
+
+          <button className="btn-creuse grid h-11 w-11 place-items-center lg:hidden" onClick={() => setOpen((value) => !value)} aria-label="Ouvrir le menu">
+            {open ? <X size={21} /> : <Menu size={21} />}
+          </button>
+        </div>
       </div>
 
       {open && (
-        <nav className="mx-auto mt-2 grid max-w-7xl gap-1 bg-white/92 p-2 shadow-xl backdrop-blur-xl lg:hidden rounded-lg">
+        <nav className="mobile-nav lg:hidden">
           {navItems.map((item) => (
             <NavLink
               key={item.path}
@@ -315,7 +436,7 @@ function Hero() {
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,30,19,0.93),rgba(5,30,19,0.62)_48%,rgba(5,30,19,0.16))]" />
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,30,19,0.18),rgba(5,30,19,0.1)_55%,rgba(5,30,19,0.86))]" />
 
-      <div className="relative mx-auto flex min-h-[96svh] max-w-7xl items-end px-5 pb-16 pt-32 sm:px-8">
+      <div className="relative mx-auto flex min-h-[96svh] max-w-7xl items-end px-5 pb-16 pt-44 sm:px-8 sm:pt-48">
         <div className="max-w-4xl">
           <div className="reveal mb-5 inline-flex items-center gap-2 bg-white/12 px-3 py-2 text-sm font-bold backdrop-blur-xl rounded-lg">
             <Sparkles size={16} />
@@ -625,7 +746,7 @@ function AboutPage() {
 
 function PageHero({ title, subtitle, image, icon: Icon }: { title: string; subtitle: string; image: string; icon: LucideIcon }) {
   return (
-    <section className="relative min-h-[60svh] overflow-hidden bg-[#0b2f20] px-5 pb-16 pt-36 text-white sm:px-8">
+    <section className="relative min-h-[60svh] overflow-hidden bg-[#0b2f20] px-5 pb-16 pt-44 text-white sm:px-8 sm:pt-48">
       <img src={image} alt="" className="absolute inset-0 h-full w-full object-cover opacity-44" />
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,30,19,0.94),rgba(5,30,19,0.64))]" />
       <div className="relative mx-auto max-w-7xl">
