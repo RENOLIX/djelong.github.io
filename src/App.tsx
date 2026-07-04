@@ -26,7 +26,6 @@ import {
   Recycle,
   Send,
   ShieldCheck,
-  Sparkles,
   Truck,
   X,
   type LucideIcon,
@@ -622,10 +621,6 @@ function Hero() {
 
       <div className="relative mx-auto flex min-h-[96svh] max-w-7xl items-end px-5 pb-16 pt-44 sm:px-8 sm:pt-48">
         <div className="max-w-4xl">
-          <div className="reveal mb-5 inline-flex items-center gap-2 bg-white/12 px-3 py-2 text-sm font-bold backdrop-blur-xl rounded-lg">
-            <Sparkles size={16} />
-            {slide.eyebrow}
-          </div>
           <h1 className="hero-title reveal font-black leading-[0.94] text-white">{slide.title}</h1>
           <p className="reveal mt-6 max-w-2xl text-lg leading-8 text-white/88 sm:text-xl">{slide.text}</p>
           <div className="reveal mt-8 flex flex-wrap gap-3">
