@@ -366,8 +366,7 @@ img {
 
 .hero-image-primary {
   object-position: center center;
-  transform: scale(1.48);
-  transform-origin: center center;
+  transition: opacity 0.85s ease;
 }
 
 .hero-title {

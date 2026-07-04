@@ -60,20 +60,20 @@ const heroSlides = [
   {
     image: images.gate,
     eyebrow: "Transformation industrielle du papier",
-    title: "Djelong Papiers",
-    text: "Fabrication et transformation de produits en papier pour les industriels, distributeurs, collectivités et clients professionnels.",
+    title: "Djelong Papiers, industrie du papier",
+    text: "Une plateforme industrielle dédiée à la transformation du papier, avec des solutions fiables pour entreprises, distributeurs et collectivités.",
   },
   {
     image: images.production,
     eyebrow: "Production et finition",
-    title: "Des produits papier réguliers, propres et prêts à livrer",
-    text: "De la matière au format fini : découpe, façonnage, contrôle, emballage et préparation des lots avec une logique industrielle.",
+    title: "Production maîtrisée, formats réguliers",
+    text: "Des lignes pensées pour convertir, découper, contrôler et conditionner les produits papier avec régularité, propreté et rendement.",
   },
   {
     image: images.logistics,
     eyebrow: "Stockage et logistique",
-    title: "Une organisation pensée pour les commandes professionnelles",
-    text: "Conditionnement, palettes, étiquetage et suivi des commandes pour garder une livraison claire et maîtrisée.",
+    title: "Logistique organisée, livraison suivie",
+    text: "Un stockage structuré pour préparer les lots, suivre les palettes et sécuriser les expéditions vers les clients professionnels.",
   },
 ];
 
@@ -615,7 +615,16 @@ function Hero() {
 
   return (
     <section className="relative min-h-[96svh] overflow-hidden bg-[#0b2f20] text-white">
-      <img src={heroSlides[0].image} alt="" className="hero-image-primary absolute inset-0 h-full w-full object-cover" />
+      {heroSlides.map((item, index) => (
+        <img
+          key={item.image}
+          src={item.image}
+          alt=""
+          className={`hero-image-primary absolute inset-0 h-full w-full object-cover ${
+            active === index ? "opacity-100" : "opacity-0"
+          }`}
+        />
+      ))}
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,30,19,0.74),rgba(5,30,19,0.38)_48%,rgba(5,30,19,0.04))]" />
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,30,19,0.08),rgba(5,30,19,0.04)_55%,rgba(5,30,19,0.54))]" />
 
@@ -627,9 +636,9 @@ function Hero() {
             <Link to="/contact" className="inline-flex items-center gap-2 bg-white px-5 py-3 font-black text-[#17492f] transition hover:bg-[#dce9dd] rounded-lg">
               Demander un devis <ArrowRight size={18} />
             </Link>
-            <a href={`tel:${phone}`} className="inline-flex items-center gap-2 bg-white/12 px-5 py-3 font-black text-white backdrop-blur-xl transition hover:bg-white/22 rounded-lg">
-              Appeler {phone}
-            </a>
+            <Link to="/contact" className="inline-flex items-center gap-2 bg-white/12 px-5 py-3 font-black text-white backdrop-blur-xl transition hover:bg-white/22 rounded-lg">
+              Recevoir une offre
+            </Link>
           </div>
         </div>
 
