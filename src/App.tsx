@@ -496,15 +496,10 @@ function Header() {
     <header className="site-header">
       <div className="top-band">
         <div className="top-band-inner">
-          <GooeySearch />
           <div className="top-contact">
             <a href={`mailto:${contactEmail}`} className="top-contact-link">
               <Mail size={16} />
               {contactEmail}
-            </a>
-            <a href={`tel:${phone}`} className="top-contact-link">
-              <Phone size={16} />
-              {phone}
             </a>
           </div>
         </div>
@@ -520,27 +515,33 @@ function Header() {
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-1 lg:flex">
-            {navItems.map((item) => (
-              <NavLink
-                key={item.path}
-                to={item.path}
-                className={({ isActive }: { isActive: boolean }) =>
-                  `relative px-3 py-2 text-sm font-bold transition ${
-                    isActive
-                      ? "text-[#17492f] after:absolute after:inset-x-3 after:-bottom-1 after:h-[2px] after:bg-[#17492f] after:content-['']"
-                      : "text-[#274b38] hover:text-[#17492f]"
-                  }`
-                }
-              >
-                {item.label}
-              </NavLink>
-            ))}
-          </nav>
+          <div className="header-right">
+            <nav className="hidden items-center gap-1 lg:flex">
+              {navItems.map((item) => (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  className={({ isActive }: { isActive: boolean }) =>
+                    `relative px-3 py-2 text-sm font-bold transition ${
+                      isActive
+                        ? "text-[#17492f] after:absolute after:inset-x-3 after:-bottom-1 after:h-[2px] after:bg-[#17492f] after:content-['']"
+                        : "text-[#274b38] hover:text-[#17492f]"
+                    }`
+                  }
+                >
+                  {item.label}
+                </NavLink>
+              ))}
+            </nav>
 
-          <button className="btn-creuse grid h-11 w-11 place-items-center lg:hidden" onClick={() => setOpen((value) => !value)} aria-label="Ouvrir le menu">
-            {open ? <X size={21} /> : <Menu size={21} />}
-          </button>
+            <div className="header-search">
+              <GooeySearch />
+            </div>
+
+            <button className="btn-creuse grid h-11 w-11 place-items-center lg:hidden" onClick={() => setOpen((value) => !value)} aria-label="Ouvrir le menu">
+              {open ? <X size={21} /> : <Menu size={21} />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -562,6 +563,10 @@ function Header() {
               {item.label}
             </NavLink>
           ))}
+          <a href={`tel:${phone}`} className="mt-2 flex items-center gap-2 px-3 py-3 text-sm font-black text-[#17492f]">
+            <Phone size={17} />
+            {phone}
+          </a>
         </nav>
       )}
     </header>
