@@ -44,6 +44,7 @@ const images = {
   gate: asset("images/hero/djelong-factory-gate.png"),
   production: asset("images/hero/paper-production-line.png"),
   logistics: asset("images/hero/paper-logistics-warehouse.png"),
+  activity: asset("images/sections/paper-transformation-activity.png"),
 };
 
 const navItems = [
@@ -528,6 +529,10 @@ function Header() {
               <Mail size={16} />
               {contactEmail}
             </a>
+            <a href={`tel:${phone}`} className="top-contact-link">
+              <Phone size={16} />
+              {phone}
+            </a>
           </div>
         </div>
       </div>
@@ -621,6 +626,7 @@ function Hero() {
       ))}
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,30,19,0.74),rgba(5,30,19,0.38)_48%,rgba(5,30,19,0.04))]" />
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,30,19,0.08),rgba(5,30,19,0.04)_55%,rgba(5,30,19,0.54))]" />
+      <div className="hero-bottom-fade" />
 
       <div className="relative mx-auto flex min-h-[96svh] max-w-7xl items-end px-5 pb-16 pt-44 sm:px-8 sm:pt-48">
         <div className="max-w-4xl">
@@ -690,7 +696,27 @@ function HomePage() {
             title="Transformation industrielle du papier"
             text="Djelong Papiers accompagne les besoins professionnels en transformation, fabrication, conditionnement et préparation de produits papier."
           />
-          <div className="mt-14 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          <div className="reveal mt-14 overflow-hidden bg-white/82 shadow-[0_24px_70px_rgba(19,63,42,0.14)] rounded-lg">
+            <div className="grid lg:grid-cols-[1.04fr_0.96fr]">
+              <img src={images.activity} alt="Transformation industrielle du papier" className="h-[360px] w-full object-cover sm:h-[440px] lg:h-full" />
+              <div className="p-7 sm:p-10">
+                <p className="text-sm font-black uppercase text-[#2c7a4b]">Activité principale</p>
+                <h3 className="mt-3 text-3xl font-black text-[#133f2a] sm:text-5xl">Transformer le papier avec précision industrielle.</h3>
+                <p className="mt-5 text-lg leading-9 text-[#536a5e]">
+                  Djelong Papiers organise la matière papier autour d'un flux clair : réception, préparation, transformation, contrôle, conditionnement et mise à disposition des commandes professionnelles.
+                </p>
+                <div className="mt-8 grid gap-3 sm:grid-cols-2">
+                  {["Formats réguliers", "Conditionnement propre", "Contrôle de lot", "Demandes sur mesure"].map((item) => (
+                    <div key={item} className="flex items-center gap-2 font-black text-[#17492f]">
+                      <CheckCircle2 size={18} />
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
             {productLines.map((item) => (
               <SoftCard key={item.title} {...item} />
             ))}
@@ -784,7 +810,7 @@ function RoadmapBlock() {
           text="Un parcours clair depuis la matière jusqu'à la livraison, avec les cartes de droite volontairement plus éloignées pour respirer."
         />
         <div ref={containerRef} className="relative mt-16">
-          <div className="pointer-events-none absolute left-1/2 top-0 hidden h-full w-16 -translate-x-1/2 text-[#2c7a4b] lg:block">
+          <div className="pointer-events-none absolute left-1/2 top-0 h-full w-10 -translate-x-1/2 text-[#2c7a4b] lg:w-16">
             <div ref={ballRef} className="roadmap-ball" />
             <svg viewBox="0 0 52 2047" fill="none" className="h-full w-full">
               <path
@@ -798,11 +824,11 @@ function RoadmapBlock() {
           </div>
           <div className="grid gap-8">
             {roadmap.map((item, index) => (
-              <article key={item.title} className={`reveal grid lg:grid-cols-2 ${index % 2 === 0 ? "lg:pr-20" : "lg:pl-32"}`}>
-                <div className={`btn-card p-6 ${index % 2 === 0 ? "lg:w-[86%]" : "lg:col-start-2 lg:ml-auto lg:w-[86%]"}`}>
+              <article key={item.title} className={`reveal grid grid-cols-2 ${index % 2 === 0 ? "pr-8 sm:pr-12 lg:pr-20" : "pl-10 sm:pl-16 lg:pl-32"}`}>
+                <div className={`btn-card roadmap-card p-4 sm:p-6 ${index % 2 === 0 ? "w-[92%] lg:w-[86%]" : "col-start-2 ml-auto w-[92%] lg:w-[86%]"}`}>
                   <p className="text-sm font-black text-[#2c7a4b]">{String(index + 1).padStart(2, "0")}</p>
-                  <h3 className="mt-3 text-2xl font-black text-[#133f2a]">{item.title}</h3>
-                  <p className="mt-3 leading-8 text-[#536a5e]">{item.text}</p>
+                  <h3 className="mt-3 text-xl font-black text-[#133f2a] sm:text-2xl">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-7 text-[#536a5e] sm:text-base sm:leading-8">{item.text}</p>
                 </div>
               </article>
             ))}
