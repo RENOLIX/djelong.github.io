@@ -43,7 +43,7 @@ const images = {
   gate: asset("images/hero/djelong-factory-gate.png"),
   production: asset("images/hero/paper-production-line.png"),
   logistics: asset("images/hero/paper-logistics-warehouse.png"),
-  activity: asset("images/sections/paper-transformation-activity.png"),
+  activity: asset("images/sections/paper-transformation-activity-precision.png"),
 };
 
 const navItems = [
