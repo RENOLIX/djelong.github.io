@@ -22,6 +22,7 @@ import {
   Newspaper,
   PackageCheck,
   Phone,
+  Quote,
   Recycle,
   Send,
   ShieldCheck,
@@ -360,6 +361,7 @@ function LoadingIcon() {
 }
 
 function GooeySearch() {
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [state, setState] = useState({
     step: 1,
@@ -376,6 +378,31 @@ function GooeySearch() {
   const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
     setState((prevState) => ({ ...prevState, searchText: event.target.value }));
   };
+
+  const resetSearch = () => {
+    setState({ step: 1, searchText: "", isLoading: false });
+  };
+
+  useEffect(() => {
+    const handlePointerDown = (event: PointerEvent) => {
+      if (state.step !== 2) return;
+      const target = event.target as Node | null;
+      if (target && wrapperRef.current?.contains(target)) return;
+      resetSearch();
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") resetSearch();
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [state.step]);
 
   useEffect(() => {
     if (state.step === 2) {
@@ -417,7 +444,7 @@ function GooeySearch() {
   }, [debouncedSearchText]);
 
   return (
-    <div className={clsx("wrapper", isUnsupported && "no-goo")}>
+    <div ref={wrapperRef} className={clsx("wrapper", isUnsupported && "no-goo")}>
       <GooeyFilter />
 
       <div className="button-content">
@@ -880,22 +907,145 @@ function AboutPage() {
     <>
       <PageHero title="À propos de Djelong Papiers" subtitle="Une entreprise de transformation industrielle du papier avec une identité claire, verte et professionnelle." image={images.gate} icon={Building2} />
       <section className="px-5 py-20 sm:px-8">
-        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="btn-card reveal p-7">
-            <p className="text-sm font-black uppercase text-[#2c7a4b]">Message du PDG</p>
-            <h2 className="mt-3 text-4xl font-black text-[#133f2a]">“Notre ambition est de faire de Djelong Papiers un partenaire fiable pour chaque client professionnel.”</h2>
-            <p className="mt-5 leading-8 text-[#536a5e]">
-              Chez Djelong Papiers, nous croyons qu'un produit papier réussi commence par une matière bien choisie, une transformation maîtrisée et une relation client directe. Notre objectif est simple : livrer des produits réguliers, propres et adaptés aux besoins du marché.
-            </p>
-            <p className="mt-5 font-black text-[#17492f]">Direction générale — Djelong Papiers</p>
+        <div className="mx-auto max-w-7xl">
+          <div className="reveal grid gap-5 lg:grid-cols-2">
+            <Link to="/a-propos/message-du-pdg" className="group overflow-hidden bg-white/82 shadow-[0_18px_48px_rgba(19,63,42,0.12)] transition hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(19,63,42,0.18)] rounded-lg">
+              <div className="grid gap-0 md:grid-cols-[0.78fr_1fr]">
+                <img src={images.production} alt="" className="h-64 w-full object-cover md:h-full" />
+                <div className="p-7">
+                  <p className="text-sm font-black uppercase text-[#2c7a4b]">Sous-catégorie</p>
+                  <h2 className="mt-3 text-3xl font-black text-[#133f2a]">Message du PDG</h2>
+                  <p className="mt-4 leading-8 text-[#536a5e]">Une prise de parole forte sur la vision, la qualité industrielle et la confiance avec les partenaires.</p>
+                  <span className="mt-6 inline-flex items-center gap-2 font-black text-[#17492f]">Lire le message <ArrowRight size={18} /></span>
+                </div>
+              </div>
+            </Link>
+
+            <Link to="/a-propos/histoire" className="group overflow-hidden bg-white/82 shadow-[0_18px_48px_rgba(19,63,42,0.12)] transition hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(19,63,42,0.18)] rounded-lg">
+              <div className="grid gap-0 md:grid-cols-[0.78fr_1fr]">
+                <img src={images.logistics} alt="" className="h-64 w-full object-cover md:h-full" />
+                <div className="p-7">
+                  <p className="text-sm font-black uppercase text-[#2c7a4b]">Sous-catégorie</p>
+                  <h2 className="mt-3 text-3xl font-black text-[#133f2a]">Histoire</h2>
+                  <p className="mt-4 leading-8 text-[#536a5e]">Le parcours Djelong Papiers, entre transformation papier, discipline industrielle et ambition internationale.</p>
+                  <span className="mt-6 inline-flex items-center gap-2 font-black text-[#17492f]">Découvrir l'histoire <ArrowRight size={18} /></span>
+                </div>
+              </div>
+            </Link>
           </div>
-          <div className="grid gap-5 sm:grid-cols-2">
+
+          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {aboutBlocks.map((item) => (
-              <article key={item.title} className="btn-card reveal p-6">
+              <article key={item.title} className="reveal bg-white/72 p-6 shadow-[0_14px_36px_rgba(19,63,42,0.1)] rounded-lg">
                 <h3 className="text-2xl font-black text-[#133f2a]">{item.title}</h3>
                 <p className="mt-3 leading-7 text-[#536a5e]">{item.text}</p>
               </article>
             ))}
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
+
+function PdgMessagePage() {
+  useScrollReveal();
+  return (
+    <>
+      <PageHero title="Message du PDG" subtitle="Une vision industrielle claire : produire avec rigueur, servir avec confiance et construire une marque papier durable." image={images.production} icon={Quote} />
+      <section className="px-5 py-20 sm:px-8">
+        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.8fr_1.2fr]">
+          <aside className="reveal overflow-hidden bg-[#0b2f20] text-white shadow-[0_24px_70px_rgba(11,47,32,0.22)] rounded-lg">
+            <img src={images.gate} alt="" className="h-72 w-full object-cover opacity-85" />
+            <div className="p-7">
+              <p className="text-sm font-black uppercase text-white/62">Direction générale</p>
+              <h2 className="mt-3 text-3xl font-black">Djelong Papiers</h2>
+              <p className="mt-4 leading-8 text-white/72">Une parole tournée vers les clients professionnels, les équipes, les partenaires et l'industrie papier.</p>
+            </div>
+          </aside>
+
+          <article className="reveal bg-white/88 p-7 shadow-[0_20px_60px_rgba(19,63,42,0.12)] rounded-lg sm:p-10">
+            <div className="mb-8 flex items-center gap-4">
+              <div className="grid h-14 w-14 place-items-center bg-[#17492f] text-white rounded-lg">
+                <Quote size={28} />
+              </div>
+              <div>
+                <p className="text-sm font-black uppercase text-[#2c7a4b]">Message de la direction</p>
+                <h2 className="text-3xl font-black text-[#133f2a]">Chers partenaires, chers clients</h2>
+              </div>
+            </div>
+
+            <div className="grid gap-5 text-lg leading-9 text-[#536a5e]">
+              <p>Chez <strong className="text-[#133f2a]">Djelong Papiers</strong>, nous considérons le papier comme une matière industrielle noble : simple en apparence, exigeante dans sa transformation et essentielle dans la vie des entreprises.</p>
+              <p>Notre engagement est de bâtir une organisation fiable, capable de répondre aux besoins des professionnels avec des produits réguliers, un conditionnement propre, des délais maîtrisés et une communication directe.</p>
+              <p>Chaque lot qui quitte notre atelier doit porter la même exigence : respect du cahier des charges, contrôle de présentation, soin dans l'emballage et sens du service. C'est cette discipline qui transforme une commande papier en relation de confiance.</p>
+              <p>Notre ambition est de faire de Djelong Papiers une référence industrielle algérienne, ouverte aux standards internationaux et prête à accompagner les distributeurs, les collectivités et les entreprises dans leurs besoins quotidiens comme dans leurs projets sur mesure.</p>
+              <p>Je remercie nos équipes pour leur engagement, nos partenaires pour leur confiance et nos clients pour leurs exigences, car elles nous poussent chaque jour à mieux produire, mieux organiser et mieux servir.</p>
+            </div>
+
+            <div className="mt-10 border-t border-[#d9e4dc] pt-7">
+              <p className="font-black text-[#133f2a]">La Direction Générale</p>
+              <p className="mt-2 text-[#2c7a4b]">Djelong Papiers</p>
+              <div className="mt-5 h-px w-48 bg-[#17492f]" />
+            </div>
+          </article>
+        </div>
+      </section>
+    </>
+  );
+}
+
+function HistoryPage() {
+  useScrollReveal();
+  const storyBlocks = [
+    {
+      title: "Une naissance autour de la matière papier",
+      text: "Djelong Papiers s'est construite autour d'une idée simple : donner au papier une transformation industrielle propre, lisible et adaptée aux besoins des professionnels. L'entreprise a placé dès le départ la régularité, le format et le conditionnement au centre de son organisation.",
+      image: images.gate,
+    },
+    {
+      title: "L'atelier comme cœur de la confiance",
+      text: "La croissance s'est organisée autour de gestes maîtrisés : réception, préparation, découpe, façonnage, contrôle et emballage. Chaque étape a été pensée pour réduire l'improvisation et donner aux clients une lecture claire de la qualité attendue.",
+      image: images.production,
+    },
+    {
+      title: "Une logistique pensée pour les commandes B2B",
+      text: "Avec l'élargissement des besoins, Djelong Papiers a renforcé la préparation des lots, l'étiquetage, le stockage et la coordination commerciale. L'objectif : faciliter les commandes répétées, les volumes professionnels et les demandes spécifiques.",
+      image: images.logistics,
+    },
+  ];
+
+  return (
+    <>
+      <PageHero title="Histoire de Djelong Papiers" subtitle="Une histoire industrielle écrite autour du papier, de la discipline de production et d'une ambition ouverte sur les standards internationaux." image={images.logistics} icon={Factory} />
+      <section className="px-5 py-20 sm:px-8">
+        <div className="mx-auto grid max-w-7xl gap-12">
+          {storyBlocks.map((block, index) => (
+            <article key={block.title} className={`reveal grid items-center gap-8 lg:grid-cols-2 ${index % 2 === 1 ? "lg:[&>img]:order-2" : ""}`}>
+              <img src={block.image} alt="" className="h-[360px] w-full object-cover shadow-[0_20px_60px_rgba(19,63,42,0.14)] rounded-lg" />
+              <div className="bg-white/78 p-8 shadow-[0_14px_42px_rgba(19,63,42,0.1)] rounded-lg">
+                <p className="text-sm font-black uppercase text-[#2c7a4b]">Étape {String(index + 1).padStart(2, "0")}</p>
+                <h2 className="mt-3 text-3xl font-black text-[#133f2a] sm:text-4xl">{block.title}</h2>
+                <p className="mt-5 text-lg leading-9 text-[#536a5e]">{block.text}</p>
+              </div>
+            </article>
+          ))}
+
+          <div className="reveal bg-[#0b2f20] p-8 text-white shadow-[0_24px_70px_rgba(11,47,32,0.22)] rounded-lg sm:p-10">
+            <p className="text-sm font-black uppercase text-white/58">Standards des grandes entreprises chinoises</p>
+            <h2 className="mt-3 max-w-4xl text-3xl font-black sm:text-5xl">Une culture industrielle inspirée par la rigueur, le volume et l'amélioration continue.</h2>
+            <div className="mt-8 grid gap-5 md:grid-cols-3">
+              {[
+                ["Discipline de production", "Des séries préparées avec méthode, des contrôles visibles et une logique de répétabilité."],
+                ["Organisation à grande échelle", "Une vision qui anticipe les volumes, les familles de produits et la stabilité des approvisionnements."],
+                ["Relation long terme", "Construire avec les clients et les partenaires une confiance durable, claire et mesurable."],
+              ].map(([title, text]) => (
+                <div key={title} className="bg-white/10 p-6 backdrop-blur rounded-lg">
+                  <h3 className="text-xl font-black">{title}</h3>
+                  <p className="mt-3 leading-7 text-white/70">{text}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -1051,6 +1201,8 @@ function AppRoutes() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/a-propos" element={<AboutPage />} />
+        <Route path="/a-propos/message-du-pdg" element={<PdgMessagePage />} />
+        <Route path="/a-propos/histoire" element={<HistoryPage />} />
         <Route path="/actualites" element={<SimplePage type="actualites" />} />
         <Route path="/sites" element={<SimplePage type="sites" />} />
         <Route path="/durabilite" element={<SimplePage type="durabilite" />} />
