@@ -36,7 +36,8 @@ gsap.registerPlugin(ScrollTrigger);
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 const phone = "0563042689";
 const contactEmail = "contact@djelong-papiers.dz";
-const mapUrl = "https://maps.apple/p/U4_5vMcmMDYBYU";
+const mapUrl = "https://maps.app.goo.gl/pBAKt9JCriRXg8vm6";
+const mapEmbedUrl = "https://www.google.com/maps?q=Djelong%20Papiers&output=embed";
 
 const images = {
   logo: asset("images/hero/djelong-logo-reference.jpeg"),
@@ -887,15 +888,17 @@ function ContactSection() {
             </a>
             <a href={mapUrl} target="_blank" rel="noreferrer" className="btn-card p-5 font-black text-[#133f2a]">
               <MapPin className="mb-3" />
-              Ouvrir Apple Maps
+              Ouvrir Google Maps
             </a>
           </div>
           <div className="map-panel mt-6">
-            <MapPin size={34} />
-            <div>
-              <p className="font-black">Localisation Djelong Papiers</p>
-              <p className="text-sm text-white/76">Lien officiel fourni par l'entreprise via Apple Maps.</p>
-            </div>
+            <iframe
+              title="Djelong Papiers sur Google Maps"
+              src={mapEmbedUrl}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="h-full min-h-[300px] w-full border-0"
+            />
           </div>
         </div>
 
@@ -1113,7 +1116,7 @@ function SimplePage({ type }: { type: "actualites" | "sites" | "durabilite" | "i
   if (type === "contact") {
     return (
       <>
-        <PageHero title="Contact" subtitle="Un formulaire clair, un téléphone direct et un lien Apple Maps pour localiser l'entreprise." image={images.gate} icon={Mail} />
+        <PageHero title="Contact" subtitle="Un formulaire clair, un téléphone direct et une carte Google Maps pour localiser l'entreprise." image={images.gate} icon={Mail} />
         <ContactSection />
       </>
     );
@@ -1211,7 +1214,7 @@ function Footer() {
           <h3 className="font-black">Contact</h3>
           <div className="mt-4 grid gap-3 text-white/72">
             <a href={`tel:${phone}`} className="hover:text-white">{phone}</a>
-            <a href={mapUrl} target="_blank" rel="noreferrer" className="hover:text-white">Apple Maps</a>
+            <a href={mapUrl} target="_blank" rel="noreferrer" className="hover:text-white">Google Maps</a>
             <span>Djelong Papiers</span>
           </div>
         </div>
