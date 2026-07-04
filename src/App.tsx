@@ -1,5 +1,7 @@
-import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { BrowserRouter, Link, NavLink, Route, Routes, useLocation } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+import clsx from "clsx";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import {
@@ -21,7 +23,6 @@ import {
   PackageCheck,
   Phone,
   Recycle,
-  Search,
   Send,
   ShieldCheck,
   Sparkles,
@@ -52,18 +53,6 @@ const navItems = [
   { label: "Durabilité", path: "/durabilite" },
   { label: "Investisseurs", path: "/investisseurs" },
   { label: "Contact", path: "/contact" },
-];
-
-const searchItems = [
-  { label: "Accueil", path: "/" },
-  { label: "A propos", path: "/a-propos" },
-  { label: "Actualites", path: "/actualites" },
-  { label: "Sites industriels", path: "/sites" },
-  { label: "Durabilite", path: "/durabilite" },
-  { label: "Investisseurs", path: "/investisseurs" },
-  { label: "Contact et devis", path: "/contact" },
-  { label: "Processus de transformation", path: "/#processus" },
-  { label: "Gamme papier industrie", path: "/#gammes" },
 ];
 
 const heroSlides = [
@@ -257,83 +246,244 @@ function useScrollReveal() {
   }, [location.pathname]);
 }
 
-function GooeySearch() {
-  const [open, setOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const inputRef = useRef<HTMLInputElement | null>(null);
-  const cleanQuery = query.trim().toLowerCase();
-  const results = (cleanQuery ? searchItems.filter((item) => item.label.toLowerCase().includes(cleanQuery)) : searchItems).slice(0, 4);
+const buttonVariants = {
+  initial: { x: 0, width: 100 },
+  step1: { x: 0, width: 100 },
+  step2: { x: -30, width: 180 },
+};
+
+const iconVariants = {
+  hidden: { x: -50, opacity: 0 },
+  visible: { x: 16, opacity: 1 },
+};
+
+function isUnsupportedBrowser() {
+  if (typeof navigator === "undefined") return false;
+
+  const ua = navigator.userAgent.toLowerCase();
+  const isSafari = ua.includes("safari") && !ua.includes("chrome") && !ua.includes("chromium") && !ua.includes("android") && !ua.includes("firefox");
+  const isChromeOniOS = ua.includes("crios");
+
+  return isSafari || isChromeOniOS;
+}
+
+function useDebounce(value: string, delay: number) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
 
   useEffect(() => {
-    if (open) inputRef.current?.focus();
-  }, [open]);
+    const timer = window.setTimeout(() => setDebouncedValue(value), delay);
+    return () => window.clearTimeout(timer);
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+
+function GooeyFilter() {
+  return (
+    <svg className="gooey-filter" aria-hidden="true">
+      <defs>
+        <filter id="goo-effect">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
+          <feColorMatrix
+            in="blur"
+            type="matrix"
+            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -15"
+            result="goo"
+          />
+          <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+        </filter>
+      </defs>
+    </svg>
+  );
+}
+
+function GooeySearchIcon({ isUnsupported }: { isUnsupported: boolean }) {
+  return (
+    <motion.svg
+      initial={{
+        opacity: 0,
+        scale: 0.8,
+        x: -4,
+        filter: isUnsupported ? "none" : "blur(5px)",
+      }}
+      animate={{
+        opacity: 1,
+        scale: 1,
+        x: 0,
+        filter: "blur(0px)",
+      }}
+      exit={{
+        opacity: 0,
+        scale: 0.8,
+        x: -4,
+        filter: isUnsupported ? "none" : "blur(5px)",
+      }}
+      transition={{
+        delay: 0.1,
+        duration: 1,
+        type: "spring",
+        bounce: 0.15,
+      }}
+      width="15"
+      height="15"
+      viewBox="0 0 15 15"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M10 6.5C10 8.433 8.433 10 6.5 10C4.567 10 3 8.433 3 6.5C3 4.567 4.567 3 6.5 3C8.433 3 10 4.567 10 6.5ZM9.30884 10.0159C8.53901 10.6318 7.56251 11 6.5 11C4.01472 11 2 8.98528 2 6.5C2 4.01472 4.01472 2 6.5 2C8.98528 2 11 4.01472 11 6.5C11 7.56251 10.6318 8.53901 10.0159 9.30884L12.8536 12.1464C13.0488 12.3417 13.0488 12.6583 12.8536 12.8536C12.6583 13.0488 12.3417 13.0488 12.1464 12.8536L9.30884 10.0159Z"
+        fillRule="evenodd"
+        clipRule="evenodd"
+      />
+    </motion.svg>
+  );
+}
+
+function LoadingIcon() {
+  return (
+    <svg className="loading-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" aria-label="Loading" role="status">
+      <rect width="256" height="256" fill="none" />
+      {[
+        ["128", "32", "128", "64"],
+        ["195.88", "60.12", "173.25", "82.75"],
+        ["224", "128", "192", "128"],
+        ["195.88", "195.88", "173.25", "173.25"],
+        ["128", "224", "128", "192"],
+        ["60.12", "195.88", "82.75", "173.25"],
+        ["32", "128", "64", "128"],
+        ["60.12", "60.12", "82.75", "82.75"],
+      ].map(([x1, y1, x2, y2]) => (
+        <line key={`${x1}-${y1}`} x1={x1} y1={y1} x2={x2} y2={y2} fill="none" stroke="#dddddd" strokeLinecap="round" strokeLinejoin="round" strokeWidth="16" />
+      ))}
+    </svg>
+  );
+}
+
+function GooeySearch() {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [state, setState] = useState({
+    step: 1,
+    searchText: "",
+    isLoading: false,
+  });
+  const debouncedSearchText = useDebounce(state.searchText, 500);
+  const isUnsupported = useMemo(() => isUnsupportedBrowser(), []);
+
+  const handleButtonClick = () => {
+    setState((prevState) => ({ ...prevState, step: 2 }));
+  };
+
+  const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
+    setState((prevState) => ({ ...prevState, searchText: event.target.value }));
+  };
+
+  useEffect(() => {
+    if (state.step === 2) {
+      inputRef.current?.focus();
+    } else {
+      setState((prevState) => ({
+        ...prevState,
+        searchText: "",
+        isLoading: false,
+      }));
+    }
+  }, [state.step]);
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    if (debouncedSearchText) {
+      setState((prevState) => ({ ...prevState, isLoading: true }));
+      const timer = window.setTimeout(() => {
+        if (!isCancelled) {
+          setState((prevState) => ({ ...prevState, isLoading: false }));
+        }
+      }, 500);
+
+      return () => {
+        isCancelled = true;
+        window.clearTimeout(timer);
+      };
+    }
+
+    setState((prevState) => ({
+      ...prevState,
+      isLoading: false,
+    }));
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [debouncedSearchText]);
 
   return (
-    <div className={`gooey-search ${open ? "is-open" : ""}`}>
-      <svg className="gooey-filter" aria-hidden="true">
-        <defs>
-          <filter id="gooey-search-filter">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="7" result="blur" />
-            <feColorMatrix
-              in="blur"
-              mode="matrix"
-              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -8"
-              result="goo"
-            />
-            <feComposite in="SourceGraphic" in2="goo" operator="atop" />
-          </filter>
-        </defs>
-      </svg>
+    <div className={clsx("wrapper", isUnsupported && "no-goo")}>
+      <GooeyFilter />
 
-      <div className="gooey-inner">
-        <div className="gooey-results" aria-hidden={!open}>
-          {open &&
-            results.map((item, index) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className="gooey-result"
-                style={{ "--result-offset": `${(index + 1) * 45}px` } as CSSProperties}
-                onClick={() => {
-                  setOpen(false);
-                  setQuery("");
+      <div className="button-content">
+        <motion.div
+          className="button-content-inner"
+          initial="initial"
+          animate={state.step === 1 ? "step1" : "step2"}
+          transition={{ duration: 0.75, type: "spring", bounce: 0.15 }}
+        >
+          <AnimatePresence mode="popLayout">
+            <motion.div
+              key="search-text-wrapper"
+              className="search-results"
+              role="listbox"
+              aria-label="Search results"
+              exit={{ scale: 0, opacity: 0 }}
+              transition={{
+                delay: isUnsupported ? 0.5 : 1.25,
+                duration: 0.5,
+              }}
+            />
+          </AnimatePresence>
+
+          <motion.div
+            variants={buttonVariants}
+            onClick={handleButtonClick}
+            whileHover={{ scale: state.step === 2 ? 1 : 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="search-btn"
+            role="button"
+          >
+            {state.step === 1 ? (
+              <span className="search-text">Search</span>
+            ) : (
+              <input
+                ref={inputRef}
+                type="text"
+                className="search-input"
+                placeholder="Type to search..."
+                aria-label="Search input"
+                onChange={handleSearch}
+              />
+            )}
+          </motion.div>
+
+          <AnimatePresence mode="wait">
+            {state.step === 2 && (
+              <motion.div
+                key="icon"
+                className="separate-element"
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                variants={iconVariants}
+                transition={{
+                  delay: 0.1,
+                  duration: 0.85,
+                  type: "spring",
+                  bounce: 0.15,
                 }}
               >
-                {item.label}
-              </Link>
-            ))}
-        </div>
-
-        <button type="button" className="gooey-button" onClick={() => setOpen(true)} aria-label="Rechercher dans le site">
-          {open ? (
-            <input
-              ref={inputRef}
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              onClick={(event) => event.stopPropagation()}
-              className="gooey-input"
-              placeholder="Rechercher"
-              aria-label="Rechercher"
-            />
-          ) : (
-            <span className="gooey-label">Search</span>
-          )}
-        </button>
-
-        <button
-          type="button"
-          className="gooey-icon"
-          aria-label={open ? "Fermer la recherche" : "Ouvrir la recherche"}
-          onClick={() => {
-            if (open && query) {
-              setQuery("");
-              return;
-            }
-            setOpen((value) => !value);
-          }}
-        >
-          <Search size={18} strokeWidth={2.6} />
-        </button>
+                {!state.isLoading ? <GooeySearchIcon isUnsupported={isUnsupported} /> : <LoadingIcon />}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
       </div>
     </div>
   );
@@ -376,8 +526,10 @@ function Header() {
                 key={item.path}
                 to={item.path}
                 className={({ isActive }: { isActive: boolean }) =>
-                  `px-3 py-2 text-sm font-bold transition rounded-lg ${
-                    isActive ? "bg-[#17492f] text-white" : "text-[#274b38] hover:bg-[#e8efe9]"
+                  `relative px-3 py-2 text-sm font-bold transition ${
+                    isActive
+                      ? "text-[#17492f] after:absolute after:inset-x-3 after:-bottom-1 after:h-[2px] after:bg-[#17492f] after:content-['']"
+                      : "text-[#274b38] hover:text-[#17492f]"
                   }`
                 }
               >
@@ -400,8 +552,10 @@ function Header() {
               to={item.path}
               onClick={() => setOpen(false)}
               className={({ isActive }: { isActive: boolean }) =>
-                `px-3 py-3 text-sm font-bold transition rounded-lg ${
-                  isActive ? "bg-[#17492f] text-white" : "text-[#274b38] hover:bg-[#e8efe9]"
+                `relative px-3 py-3 text-sm font-bold transition ${
+                  isActive
+                    ? "text-[#17492f] after:absolute after:inset-x-3 after:bottom-1 after:h-[2px] after:bg-[#17492f] after:content-['']"
+                    : "text-[#274b38] hover:text-[#17492f]"
                 }`
               }
             >
@@ -430,11 +584,11 @@ function Hero() {
           key={item.image}
           src={item.image}
           alt=""
-          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${active === index ? "opacity-100" : "opacity-0"}`}
+          className={`absolute inset-0 h-full w-full object-cover transition-[opacity,transform] duration-1000 ${index === 0 ? "hero-image-primary" : ""} ${active === index ? "opacity-100" : "opacity-0"}`}
         />
       ))}
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,30,19,0.93),rgba(5,30,19,0.62)_48%,rgba(5,30,19,0.16))]" />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,30,19,0.18),rgba(5,30,19,0.1)_55%,rgba(5,30,19,0.86))]" />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,30,19,0.74),rgba(5,30,19,0.38)_48%,rgba(5,30,19,0.04))]" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,30,19,0.08),rgba(5,30,19,0.04)_55%,rgba(5,30,19,0.54))]" />
 
       <div className="relative mx-auto flex min-h-[96svh] max-w-7xl items-end px-5 pb-16 pt-44 sm:px-8 sm:pt-48">
         <div className="max-w-4xl">
@@ -719,7 +873,7 @@ function AboutPage() {
   useScrollReveal();
   return (
     <>
-      <PageHero title="À propos de Djelong Papiers" subtitle="Une entreprise de transformation industrielle du papier avec une identité claire, verte et professionnelle." image={images.logo} icon={Building2} />
+      <PageHero title="À propos de Djelong Papiers" subtitle="Une entreprise de transformation industrielle du papier avec une identité claire, verte et professionnelle." image={images.gate} icon={Building2} />
       <section className="px-5 py-20 sm:px-8">
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.9fr_1.1fr]">
           <div className="btn-card reveal p-7">
@@ -747,8 +901,8 @@ function AboutPage() {
 function PageHero({ title, subtitle, image, icon: Icon }: { title: string; subtitle: string; image: string; icon: LucideIcon }) {
   return (
     <section className="relative min-h-[60svh] overflow-hidden bg-[#0b2f20] px-5 pb-16 pt-44 text-white sm:px-8 sm:pt-48">
-      <img src={image} alt="" className="absolute inset-0 h-full w-full object-cover opacity-44" />
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,30,19,0.94),rgba(5,30,19,0.64))]" />
+      <img src={image} alt="" className="absolute inset-0 h-full w-full object-cover opacity-70" />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,30,19,0.72),rgba(5,30,19,0.28))]" />
       <div className="relative mx-auto max-w-7xl">
         <div className="reveal grid h-14 w-14 place-items-center bg-white/12 backdrop-blur-xl rounded-lg">
           <Icon size={26} />

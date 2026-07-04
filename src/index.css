@@ -145,11 +145,31 @@ img {
   backdrop-filter: blur(20px);
 }
 
-.gooey-search {
+.wrapper {
   position: relative;
   z-index: 3;
-  width: 260px;
-  height: 44px;
+  width: 238px;
+  height: 48px;
+}
+
+.wrapper.no-goo .button-content .button-content-inner {
+  filter: none !important;
+}
+
+.wrapper.no-goo .button-content .button-content-inner .search-btn {
+  padding: 5px 10px;
+}
+
+.wrapper.no-goo .button-content .button-content-inner .search-btn .search-text {
+  pointer-events: none;
+  position: relative;
+  left: 0;
+  text-align: center;
+}
+
+.wrapper.no-goo .button-content .button-content-inner .separate-element {
+  width: 36px;
+  height: 36px;
 }
 
 .gooey-filter {
@@ -159,119 +179,87 @@ img {
   pointer-events: none;
 }
 
-.gooey-inner {
+.button-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max-content;
+  transform: translate(-50%, -50%);
+}
+
+.button-content-inner {
+  max-width: max-content;
+  cursor: pointer;
+  filter: url("#goo-effect");
+}
+
+.search-results {
   position: relative;
-  width: 260px;
-  height: 44px;
-  filter: url("#gooey-search-filter");
-}
-
-.gooey-button,
-.gooey-icon,
-.gooey-result {
-  color: #eaf4ec;
-  background: #050807;
-  border: 0;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-.gooey-button {
-  position: absolute;
-  top: 1px;
-  left: 0;
-  width: 104px;
-  height: 42px;
-  padding: 0 1.15rem;
-  overflow: hidden;
-  border-radius: 999px;
-  font-size: 0.88rem;
-  font-weight: 900;
-  text-align: left;
-  transition:
-    width 0.58s cubic-bezier(0.68, -0.2, 0.25, 1.2),
-    transform 0.58s cubic-bezier(0.68, -0.2, 0.25, 1.2);
-}
-
-.gooey-search.is-open .gooey-button {
-  width: 224px;
-  transform: translateX(-12px);
-}
-
-.gooey-label {
-  display: inline-block;
-  padding-left: 0.15rem;
-}
-
-.gooey-input {
-  width: 100%;
-  height: 100%;
-  padding: 0 2.2rem 0 0.35rem;
-  color: #f6fbf7;
-  background: transparent;
-  border: 0;
-  outline: none;
-  font-size: 0.9rem;
-  font-weight: 800;
-}
-
-.gooey-input::placeholder {
-  color: rgba(255, 255, 255, 0.58);
-}
-
-.gooey-icon {
-  position: absolute;
-  top: 1px;
-  right: 18px;
-  display: grid;
-  width: 42px;
-  height: 42px;
-  place-items: center;
-  border-radius: 999px;
-  transition:
-    transform 0.5s cubic-bezier(0.68, -0.2, 0.25, 1.2),
-    background 0.2s ease;
-}
-
-.gooey-search.is-open .gooey-icon {
-  transform: translateX(12px) rotate(8deg);
-}
-
-.gooey-icon:hover {
-  background: #102318;
-}
-
-.gooey-results {
-  position: absolute;
-  top: 0;
-  left: 2px;
   z-index: -1;
 }
 
-.gooey-result {
+.search-btn {
+  color: #ddddddaf;
+  cursor: pointer;
+  letter-spacing: -0.5px;
+  background-color: #000000;
+  outline: none;
+  border: none;
+  border-radius: 9999px;
+  padding: 10px 20px;
+}
+
+.search-text {
+  pointer-events: none;
+  position: relative;
+  left: 4px;
+  text-align: center;
+}
+
+.search-input {
+  width: 100%;
+  color: #dddddd;
+  background-color: transparent;
+  outline: none;
+  border: none;
+}
+
+.search-input::placeholder {
+  color: rgba(221, 221, 221, 0.55);
+}
+
+.separate-element {
   position: absolute;
-  top: 0;
-  left: 0;
-  min-width: 175px;
-  min-height: 37px;
-  padding: 0.65rem 1rem;
-  border-radius: 999px;
-  font-size: 0.78rem;
-  font-weight: 900;
-  white-space: nowrap;
-  opacity: 0;
-  transform: translateY(0) scale(0.88);
-  animation: gooey-result-in 0.46s cubic-bezier(0.2, 0.9, 0.2, 1.2) forwards;
+  top: -1px;
+  right: -5px;
+  display: flex;
+  width: 46px;
+  height: 46px;
+  align-items: center;
+  justify-content: center;
+  background-color: #000000;
+  border-radius: 9999px;
 }
 
-.gooey-result:hover {
-  color: white;
-  background: #17492f;
+.separate-element svg {
+  width: 20px;
+  height: 20px;
 }
 
-@keyframes gooey-result-in {
-  to {
-    opacity: 1;
-    transform: translateY(var(--result-offset)) scale(1);
+.separate-element svg path {
+  fill: #dddddd;
+}
+
+.separate-element svg.loading-icon {
+  width: 20px;
+  height: 20px;
+  animation: rotate 0.5s linear infinite;
+  transform-origin: center center;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(180deg);
   }
 }
 
@@ -298,13 +286,18 @@ img {
     padding: 0.7rem 1rem;
   }
 
-  .gooey-search,
-  .gooey-inner {
-    width: 238px;
+  .wrapper {
+    width: 222px;
   }
 
-  .gooey-search.is-open .gooey-button {
-    width: 204px;
+  .separate-element {
+    top: 2px;
+    scale: 1.1;
+  }
+
+  .separate-element svg {
+    width: 24px;
+    height: 24px;
   }
 }
 
@@ -345,6 +338,10 @@ img {
 .hero-dot-active {
   width: 30px;
   background: #ffffff;
+}
+
+.hero-image-primary {
+  transform: scale(1.12);
 }
 
 .hero-title {
