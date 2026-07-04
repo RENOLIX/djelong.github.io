@@ -616,17 +616,9 @@ function Hero() {
 
   return (
     <section className="relative min-h-[96svh] overflow-hidden bg-[#0b2f20] text-white">
-      {heroSlides.map((item, index) => (
-        <img
-          key={item.image}
-          src={item.image}
-          alt=""
-          className={`absolute inset-0 h-full w-full object-cover transition-[opacity,transform] duration-1000 ${index === 0 ? "hero-image-primary" : ""} ${active === index ? "opacity-100" : "opacity-0"}`}
-        />
-      ))}
+      <img src={heroSlides[0].image} alt="" className="hero-image-primary absolute inset-0 h-full w-full object-cover" />
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,30,19,0.74),rgba(5,30,19,0.38)_48%,rgba(5,30,19,0.04))]" />
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,30,19,0.08),rgba(5,30,19,0.04)_55%,rgba(5,30,19,0.54))]" />
-      <div className="hero-bottom-fade" />
 
       <div className="relative mx-auto flex min-h-[96svh] max-w-7xl items-end px-5 pb-16 pt-44 sm:px-8 sm:pt-48">
         <div className="max-w-4xl">
