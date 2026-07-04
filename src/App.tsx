@@ -806,7 +806,7 @@ function RoadmapBlock() {
           text="Un parcours clair depuis la matière jusqu'à la livraison, avec les cartes de droite volontairement plus éloignées pour respirer."
         />
         <div ref={containerRef} className="relative mt-16">
-          <div className="pointer-events-none absolute left-1/2 top-0 h-full w-10 -translate-x-1/2 text-[#2c7a4b] lg:w-16">
+          <div className="pointer-events-none absolute -left-2 top-0 h-full w-10 text-[#2c7a4b] lg:left-1/2 lg:w-16 lg:-translate-x-1/2">
             <div ref={ballRef} className="roadmap-ball" />
             <svg viewBox="0 0 52 2047" fill="none" className="h-full w-full">
               <path
@@ -820,8 +820,17 @@ function RoadmapBlock() {
           </div>
           <div className="grid gap-8">
             {roadmap.map((item, index) => (
-              <article key={item.title} className={`reveal grid grid-cols-2 ${index % 2 === 0 ? "pr-8 sm:pr-12 lg:pr-20" : "pl-10 sm:pl-16 lg:pl-32"}`}>
-                <div className={`btn-card roadmap-card p-4 sm:p-6 ${index % 2 === 0 ? "w-[92%] lg:w-[86%]" : "col-start-2 ml-auto w-[92%] lg:w-[86%]"}`}>
+              <article
+                key={item.title}
+                className={`reveal pl-12 lg:grid lg:grid-cols-2 lg:pl-0 ${
+                  index % 2 === 0 ? "lg:pr-20" : "lg:pl-32"
+                }`}
+              >
+                <div
+                  className={`btn-card roadmap-card w-full p-4 sm:p-6 lg:w-[86%] ${
+                    index % 2 === 0 ? "" : "lg:col-start-2 lg:ml-auto"
+                  }`}
+                >
                   <p className="text-sm font-black text-[#2c7a4b]">{String(index + 1).padStart(2, "0")}</p>
                   <h3 className="mt-3 text-xl font-black text-[#133f2a] sm:text-2xl">{item.title}</h3>
                   <p className="mt-3 text-sm leading-7 text-[#536a5e] sm:text-base sm:leading-8">{item.text}</p>
