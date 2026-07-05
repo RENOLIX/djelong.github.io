@@ -37,7 +37,7 @@ const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 const phone = "0563042689";
 const contactEmail = "contact@djelong-papiers.dz";
 const mapUrl = "https://maps.app.goo.gl/pBAKt9JCriRXg8vm6";
-const mapEmbedUrl = "https://www.google.com/maps?q=Djelong%20Papiers&output=embed";
+const mapEmbedUrl = "https://maps.google.com/maps?hl=fr&q=35.4510029,2.906158%20(Djelong%20Papiers)&z=16&iwloc=B&output=embed";
 
 const images = {
   logo: asset("images/hero/djelong-logo-reference.jpeg"),
@@ -899,6 +899,10 @@ function ContactSection() {
               referrerPolicy="no-referrer-when-downgrade"
               className="h-full min-h-[300px] w-full border-0"
             />
+            <a href={mapUrl} target="_blank" rel="noreferrer" className="map-pin-label">
+              <MapPin size={17} />
+              Djelong Papiers
+            </a>
           </div>
         </div>
 
