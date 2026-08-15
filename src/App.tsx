@@ -16,17 +16,22 @@ import {
   Globe2,
   Layers3,
   Leaf,
+  LockKeyhole,
   Mail,
   MapPin,
   Menu,
   Newspaper,
   PackageCheck,
+  Pencil,
   Phone,
+  Plus,
   Quote,
   Recycle,
   Send,
   ShieldCheck,
   Truck,
+  Trash2,
+  LogOut,
   X,
   type LucideIcon,
 } from "lucide-react";
@@ -38,6 +43,7 @@ const phone = "0563042689";
 const contactEmail = "contact@djelong-papiers.dz";
 const mapUrl = "https://maps.app.goo.gl/pBAKt9JCriRXg8vm6";
 const mapEmbedUrl = "https://maps.google.com/maps?hl=fr&q=35.4510029,2.906158%20(Djelong%20Papiers)&z=16&iwloc=B&output=embed";
+const newsApiUrl = import.meta.env.VITE_NEWS_API_URL?.replace(/\/$/, "") ?? "";
 
 const images = {
   logo: asset("images/hero/djelong-logo-reference.jpeg"),
@@ -846,6 +852,24 @@ function RoadmapBlock() {
 }
 
 function NewsPreview() {
+  const [publishedNews, setPublishedNews] = useState(news);
+
+  useEffect(() => {
+    if (!newsApiUrl) return;
+    fetch(`${newsApiUrl}/news`)
+      .then((response) => (response.ok ? response.json() : Promise.reject(new Error("Actualités indisponibles"))))
+      .then((payload: { items: Array<{ id: string; title: string; excerpt: string; coverImage: string; publishedAt: string | null }> }) => {
+        if (!payload.items.length) return;
+        setPublishedNews(payload.items.map((item) => ({
+          image: item.coverImage,
+          date: item.publishedAt ? new Intl.DateTimeFormat("fr-FR", { month: "long", year: "numeric" }).format(new Date(item.publishedAt)) : "Actualité Djelong",
+          title: item.title,
+          text: item.excerpt,
+        })));
+      })
+      .catch(() => undefined);
+  }, []);
+
   return (
     <section className="px-5 py-24 sm:px-8">
       <div className="mx-auto max-w-7xl">
@@ -855,7 +879,7 @@ function NewsPreview() {
           text="Des cartes simples, professionnelles, illustrées et orientées communication corporate."
         />
         <div className="mt-12 grid gap-6 lg:grid-cols-3">
-          {news.map((item) => (
+          {publishedNews.map((item) => (
             <article key={item.title} className="reveal overflow-hidden bg-white shadow-[0_16px_42px_rgba(19,63,42,0.12)] rounded-lg">
               <img src={item.image} alt="" className="h-56 w-full object-cover" />
               <div className="p-6">
@@ -1231,12 +1255,190 @@ function Footer() {
   );
 }
 
+type ManagedNews = {
+  id: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  coverImage: string;
+  status: "BROUILLON" | "PUBLIE";
+  publishedAt: string | null;
+  updatedAt: string;
+};
+
+type NewsDraft = Omit<ManagedNews, "id" | "updatedAt">;
+
+const emptyNewsDraft: NewsDraft = {
+  title: "",
+  excerpt: "",
+  content: "",
+  coverImage: images.production,
+  status: "BROUILLON",
+  publishedAt: null,
+};
+
+async function adminRequest<T>(path: string, token: string, options: RequestInit = {}) {
+  const response = await fetch(`${newsApiUrl}${path}`, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(options.headers ?? {}),
+    },
+  });
+
+  if (!response.ok) {
+    const payload = (await response.json().catch(() => ({}))) as { message?: string };
+    throw new Error(payload.message ?? "Une erreur est survenue.");
+  }
+
+  return (await response.json()) as T;
+}
+
+function AdminPortal() {
+  const [token, setToken] = useState(() => sessionStorage.getItem("djelong-admin-token") ?? "");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [items, setItems] = useState<ManagedNews[]>([]);
+  const [draft, setDraft] = useState<NewsDraft>(emptyNewsDraft);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [notice, setNotice] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const loadNews = async (currentToken = token) => {
+    const payload = await adminRequest<{ items: ManagedNews[] }>("/admin/news", currentToken);
+    setItems(payload.items);
+  };
+
+  useEffect(() => {
+    if (!token || !newsApiUrl) return;
+    loadNews().catch((error: Error) => {
+      setNotice(error.message);
+      sessionStorage.removeItem("djelong-admin-token");
+      setToken("");
+    });
+  }, [token]);
+
+  const signIn = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!newsApiUrl) {
+      setNotice("L'API Huawei n'est pas encore reliée. Le panneau est prêt mais la base de données doit être créée avant la première connexion.");
+      return;
+    }
+
+    setLoading(true);
+    setNotice("");
+    try {
+      const payload = await adminRequest<{ token: string }>("/auth/login", "", {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+      });
+      sessionStorage.setItem("djelong-admin-token", payload.token);
+      setToken(payload.token);
+      setPassword("");
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : "Connexion impossible.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const saveNews = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setLoading(true);
+    setNotice("");
+    try {
+      const payload = await adminRequest<{ item: ManagedNews }>(editingId ? `/admin/news/${editingId}` : "/admin/news", token, {
+        method: editingId ? "PATCH" : "POST",
+        body: JSON.stringify(draft),
+      });
+      setItems((current) => (editingId ? current.map((item) => (item.id === payload.item.id ? payload.item : item)) : [payload.item, ...current]));
+      setDraft(emptyNewsDraft);
+      setEditingId(null);
+      setNotice(editingId ? "Actualité mise à jour." : "Actualité ajoutée.");
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : "Enregistrement impossible.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const removeNews = async (id: string) => {
+    if (!window.confirm("Supprimer définitivement cette actualité ?")) return;
+    try {
+      await adminRequest(`/admin/news/${id}`, token, { method: "DELETE" });
+      setItems((current) => current.filter((item) => item.id !== id));
+      setNotice("Actualité supprimée.");
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : "Suppression impossible.");
+    }
+  };
+
+  const updateDraft = <Key extends keyof NewsDraft>(key: Key, value: NewsDraft[Key]) => setDraft((current) => ({ ...current, [key]: value }));
+
+  if (!token) {
+    return (
+      <main className="admin-shell">
+        <section className="admin-login">
+          <div className="admin-mark"><LockKeyhole size={24} /></div>
+          <p className="admin-eyebrow">DJELONG PAPIERS</p>
+          <h1>Administration des actualités</h1>
+          <p>Un accès réservé pour publier la communication officielle de l'entreprise.</p>
+          <form onSubmit={signIn} className="admin-form">
+            <label>Adresse e-mail<input required type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="admin@djelong.com" /></label>
+            <label>Mot de passe<input required type="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Votre mot de passe" /></label>
+            <button type="submit" disabled={loading}>{loading ? "Connexion..." : "Se connecter"}</button>
+          </form>
+          {notice && <p className="admin-notice">{notice}</p>}
+          <Link to="/" className="admin-back">Retour au site</Link>
+        </section>
+      </main>
+    );
+  }
+
+  return (
+    <main className="admin-shell">
+      <section className="admin-dashboard">
+        <header className="admin-header">
+          <div><p className="admin-eyebrow">ESPACE PRIVÉ</p><h1>Actualités Djelong</h1></div>
+          <div className="admin-actions"><Link to="/actualites">Voir le site</Link><button onClick={() => { sessionStorage.removeItem("djelong-admin-token"); setToken(""); }} aria-label="Se déconnecter"><LogOut size={18} /></button></div>
+        </header>
+        <div className="admin-grid">
+          <section className="admin-editor">
+            <div className="admin-section-title"><div><p>{editingId ? "Modifier" : "Nouvelle actualité"}</p><h2>{editingId ? "Mettre à jour la publication" : "Créer une publication"}</h2></div><Plus size={22} /></div>
+            <form onSubmit={saveNews} className="admin-form admin-form-editor">
+              <label>Titre<input required value={draft.title} onChange={(event) => updateDraft("title", event.target.value)} placeholder="Titre de l'actualité" /></label>
+              <label>Résumé<textarea required rows={3} value={draft.excerpt} onChange={(event) => updateDraft("excerpt", event.target.value)} placeholder="Résumé court" /></label>
+              <label>Contenu<textarea required rows={7} value={draft.content} onChange={(event) => updateDraft("content", event.target.value)} placeholder="Texte complet de l'actualité" /></label>
+              <label>Image de couverture (URL OBS)<input required value={draft.coverImage} onChange={(event) => updateDraft("coverImage", event.target.value)} placeholder="https://..." /></label>
+              <div className="admin-form-row"><label>Statut<select value={draft.status} onChange={(event) => updateDraft("status", event.target.value as NewsDraft["status"])}><option value="BROUILLON">Brouillon</option><option value="PUBLIE">Publié</option></select></label><label>Date de publication<input type="datetime-local" value={draft.publishedAt ?? ""} onChange={(event) => updateDraft("publishedAt", event.target.value ? new Date(event.target.value).toISOString() : null)} /></label></div>
+              <div className="admin-editor-actions"><button type="submit" disabled={loading}>{loading ? "Enregistrement..." : editingId ? "Enregistrer" : "Ajouter l'actualité"}</button>{editingId && <button type="button" className="admin-cancel" onClick={() => { setEditingId(null); setDraft(emptyNewsDraft); }}>Annuler</button>}</div>
+            </form>
+            {notice && <p className="admin-notice">{notice}</p>}
+          </section>
+          <section className="admin-list">
+            <div className="admin-section-title"><div><p>Publications</p><h2>{items.length} actualité{items.length > 1 ? "s" : ""}</h2></div></div>
+            <div className="admin-news-list">
+              {items.map((item) => <article key={item.id} className="admin-news-item"><img src={item.coverImage} alt="" /><div><span className={item.status === "PUBLIE" ? "admin-status-published" : "admin-status-draft"}>{item.status === "PUBLIE" ? "Publié" : "Brouillon"}</span><h3>{item.title}</h3><p>{item.excerpt}</p><div className="admin-item-actions"><button onClick={() => { setEditingId(item.id); setDraft({ title: item.title, excerpt: item.excerpt, content: item.content, coverImage: item.coverImage, status: item.status, publishedAt: item.publishedAt }); window.scrollTo({ top: 0, behavior: "smooth" }); }} aria-label="Modifier"><Pencil size={16} /></button><button onClick={() => removeNews(item.id)} aria-label="Supprimer"><Trash2 size={16} /></button></div></div></article>)}
+              {!items.length && <p className="admin-empty">Aucune actualité. Crée la première publication.</p>}
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+  );
+}
+
 function AppRoutes() {
+  const location = useLocation();
+  const isAdmin = location.pathname === "/admin";
+
   return (
     <>
       <ScrollToTop />
-      <Header />
+      {!isAdmin && <Header />}
       <Routes>
+        <Route path="/admin" element={<AdminPortal />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/a-propos" element={<AboutPage />} />
         <Route path="/a-propos/message-du-pdg" element={<PdgMessagePage />} />
@@ -1248,7 +1450,7 @@ function AppRoutes() {
         <Route path="/contact" element={<SimplePage type="contact" />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
-      <Footer />
+      {!isAdmin && <Footer />}
     </>
   );
 }

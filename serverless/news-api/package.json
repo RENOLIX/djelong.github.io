@@ -1,0 +1,10 @@
+{
+  "name": "djelong-news-api",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.14.1"
+  }
+}
