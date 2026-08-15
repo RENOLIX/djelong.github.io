@@ -1,8 +1,10 @@
 import bcrypt from "bcryptjs";
+import { createRequire } from "node:module";
+import { randomUUID } from "node:crypto";
 import jwt from "jsonwebtoken";
-import mysql from "mysql2/promise";
 
-let pool;
+const require = createRequire(import.meta.url);
+const ObsClient = require("esdk-obs-nodejs");
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": process.env.ALLOWED_ORIGIN ?? "https://djelong.com",
@@ -15,21 +17,14 @@ function json(statusCode, body) {
   return { statusCode, headers: corsHeaders, body: JSON.stringify(body) };
 }
 
-function database() {
-  if (!pool) {
-    pool = mysql.createPool({
-      host: process.env.DB_HOST,
-      port: Number(process.env.DB_PORT ?? 3306),
-      user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME ?? "djelong",
-      waitForConnections: true,
-      connectionLimit: 4,
-      ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: true } : undefined,
-    });
-  }
-  return pool;
-}
+const obs = new ObsClient({
+  access_key_id: process.env.OBS_ACCESS_KEY_ID,
+  secret_access_key: process.env.OBS_SECRET_ACCESS_KEY,
+  server: process.env.OBS_ENDPOINT ?? "https://obs.af-south-1.myhuaweicloud.com",
+});
+
+const bucket = process.env.OBS_BUCKET ?? "djelong-papiers-web-2026";
+const newsKey = "admin/news.json";
 
 function payload(event) {
   if (!event.body) return {};
@@ -65,17 +60,22 @@ function normalizeNews(input) {
   };
 }
 
-function toNews(row) {
-  return {
-    id: String(row.id),
-    title: row.title,
-    excerpt: row.excerpt,
-    content: row.content,
-    coverImage: row.cover_image,
-    status: row.status,
-    publishedAt: row.published_at,
-    updatedAt: row.updated_at,
-  };
+async function readNews() {
+  const result = await obs.getObject({ Bucket: bucket, Key: newsKey });
+  if (result.CommonMsg.Status === 404) return [];
+  if (result.CommonMsg.Status >= 300) throw new Error("Impossible de lire les actualités dans OBS.");
+  const content = result.InterfaceResult.Content;
+  return JSON.parse(Buffer.isBuffer(content) ? content.toString("utf8") : String(content));
+}
+
+async function writeNews(items) {
+  const result = await obs.putObject({
+    Bucket: bucket,
+    Key: newsKey,
+    Body: JSON.stringify(items, null, 2),
+    ContentType: "application/json; charset=utf-8",
+  });
+  if (result.CommonMsg.Status >= 300) throw new Error("Impossible d'enregistrer les actualités dans OBS.");
 }
 
 export async function handler(event) {
@@ -84,35 +84,34 @@ export async function handler(event) {
   try {
     const method = methodOf(event);
     const path = pathOf(event).replace(/^\/api/, "");
-    const db = database();
-
     if (method === "POST" && path === "/auth/login") {
       const { email, password } = payload(event);
-      const [rows] = await db.execute("SELECT id, email, password_hash, name FROM admin_users WHERE email = ? LIMIT 1", [email?.trim().toLowerCase()]);
-      const user = rows[0];
-      if (!user || !(await bcrypt.compare(password ?? "", user.password_hash))) return json(401, { message: "E-mail ou mot de passe incorrect." });
-      const token = jwt.sign({ sub: user.id, email: user.email, name: user.name }, process.env.JWT_SECRET, { expiresIn: "8h" });
+      const isValidEmail = email?.trim().toLowerCase() === process.env.ADMIN_EMAIL?.toLowerCase();
+      const isValidPassword = await bcrypt.compare(password ?? "", process.env.ADMIN_PASSWORD_HASH ?? "");
+      if (!isValidEmail || !isValidPassword) return json(401, { message: "E-mail ou mot de passe incorrect." });
+      const token = jwt.sign({ sub: "djelong-admin", email: process.env.ADMIN_EMAIL }, process.env.JWT_SECRET, { expiresIn: "8h" });
       return json(200, { token });
     }
 
     if (method === "GET" && path === "/news") {
-      const [rows] = await db.execute("SELECT id, title, excerpt, cover_image, published_at FROM news WHERE status = 'PUBLIE' ORDER BY published_at DESC, id DESC");
-      return json(200, { items: rows.map((row) => ({ id: String(row.id), title: row.title, excerpt: row.excerpt, coverImage: row.cover_image, publishedAt: row.published_at })) });
+      const items = await readNews();
+      return json(200, { items: items.filter((item) => item.status === "PUBLIE").sort((a, b) => String(b.publishedAt ?? "").localeCompare(String(a.publishedAt ?? ""))).map(({ content, ...item }) => item) });
     }
 
     if (!path.startsWith("/admin/news")) return json(404, { message: "Route inconnue." });
     verifiedAdmin(event);
 
     if (method === "GET" && path === "/admin/news") {
-      const [rows] = await db.execute("SELECT id, title, excerpt, content, cover_image, status, published_at, updated_at FROM news ORDER BY updated_at DESC, id DESC");
-      return json(200, { items: rows.map(toNews) });
+      const items = await readNews();
+      return json(200, { items: items.sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt))) });
     }
 
     if (method === "POST" && path === "/admin/news") {
       const item = normalizeNews(payload(event));
-      const [result] = await db.execute("INSERT INTO news (title, excerpt, content, cover_image, status, published_at) VALUES (?, ?, ?, ?, ?, ?)", [item.title, item.excerpt, item.content, item.coverImage, item.status, item.publishedAt]);
-      const [rows] = await db.execute("SELECT id, title, excerpt, content, cover_image, status, published_at, updated_at FROM news WHERE id = ?", [result.insertId]);
-      return json(201, { item: toNews(rows[0]) });
+      const items = await readNews();
+      const created = { id: randomUUID(), ...item, updatedAt: new Date().toISOString() };
+      await writeNews([created, ...items]);
+      return json(201, { item: created });
     }
 
     const id = path.match(/^\/admin\/news\/(\d+)$/)?.[1];
@@ -120,13 +119,16 @@ export async function handler(event) {
 
     if (method === "PATCH") {
       const item = normalizeNews(payload(event));
-      await db.execute("UPDATE news SET title = ?, excerpt = ?, content = ?, cover_image = ?, status = ?, published_at = ? WHERE id = ?", [item.title, item.excerpt, item.content, item.coverImage, item.status, item.publishedAt, id]);
-      const [rows] = await db.execute("SELECT id, title, excerpt, content, cover_image, status, published_at, updated_at FROM news WHERE id = ?", [id]);
-      return json(200, { item: toNews(rows[0]) });
+      const items = await readNews();
+      const updated = { id, ...item, updatedAt: new Date().toISOString() };
+      if (!items.some((news) => news.id === id)) return json(404, { message: "Actualité introuvable." });
+      await writeNews(items.map((news) => news.id === id ? updated : news));
+      return json(200, { item: updated });
     }
 
     if (method === "DELETE") {
-      await db.execute("DELETE FROM news WHERE id = ?", [id]);
+      const items = await readNews();
+      await writeNews(items.filter((news) => news.id !== id));
       return json(200, { deleted: true });
     }
 
