@@ -11,10 +11,10 @@ Le panneau est disponible a l'adresse `https://djelong.com/admin` apres publicat
 
 ## Deploiement Huawei
 
-1. Dans `serverless/news-api`, lancer `npm install`, puis compresser le contenu du dossier avec `node_modules`.
+1. Compresser les fichiers du dossier `serverless/news-api` sans `node_modules` : FunctionGraph fournit son client OBS Node.js.
 2. Creer une fonction Huawei FunctionGraph Node.js, importer l'archive et utiliser `index.handler` comme handler.
 3. Creer une cle IAM limitee au bucket `djelong-papiers-web-2026`, ou attribuer une agence FunctionGraph avec les droits OBS de lecture/ecriture sur ce bucket.
-4. Ajouter les variables de `.env.example` dans la configuration FunctionGraph, sans jamais les placer dans Git.
+4. Generer le hash du mot de passe avec `node generate-password-hash.mjs "votre-mot-de-passe"`, puis ajouter les variables de `.env.example` dans FunctionGraph. Ne jamais placer de secret dans Git.
 5. Relier la fonction a API Gateway avec ces routes : `POST /auth/login`, `GET /news`, `GET|POST /admin/news`, `PATCH|DELETE /admin/news/{id}`.
 6. Ajouter l'URL API Gateway dans l'environnement du site : `VITE_NEWS_API_URL=https://api.djelong.com/api`, puis executer `npm run build:huawei`.
 

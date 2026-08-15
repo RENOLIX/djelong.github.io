@@ -1,10 +1,9 @@
-import bcrypt from "bcryptjs";
 import { createRequire } from "node:module";
-import { randomUUID } from "node:crypto";
-import jwt from "jsonwebtoken";
+import { createHmac, randomUUID, scryptSync, timingSafeEqual } from "node:crypto";
 
 const require = createRequire(import.meta.url);
-const ObsClient = require("esdk-obs-nodejs");
+// obs_client is provided by the Huawei FunctionGraph Node.js runtime.
+const ObsClient = require("obs_client");
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": process.env.ALLOWED_ORIGIN ?? "https://djelong.com",
@@ -42,7 +41,25 @@ function methodOf(event) {
 function verifiedAdmin(event) {
   const authorization = event.headers?.authorization ?? event.headers?.Authorization;
   if (!authorization?.startsWith("Bearer ")) throw new Error("Accès administrateur requis.");
-  return jwt.verify(authorization.slice(7), process.env.JWT_SECRET);
+  const [encodedPayload, signature] = authorization.slice(7).split(".");
+  const expected = createHmac("sha256", process.env.JWT_SECRET).update(encodedPayload).digest("base64url");
+  if (!signature || !timingSafeEqual(Buffer.from(signature), Buffer.from(expected))) throw new Error("Session invalide ou expirée.");
+  const session = JSON.parse(Buffer.from(encodedPayload, "base64url").toString("utf8"));
+  if (!session.exp || Date.now() > session.exp) throw new Error("Session invalide ou expirée.");
+  return session;
+}
+
+function passwordIsValid(password) {
+  const [salt, storedHash] = (process.env.ADMIN_PASSWORD_HASH ?? "").split(":");
+  if (!salt || !storedHash) return false;
+  const calculatedHash = scryptSync(password ?? "", salt, 64).toString("hex");
+  return timingSafeEqual(Buffer.from(calculatedHash), Buffer.from(storedHash));
+}
+
+function createToken() {
+  const payload = Buffer.from(JSON.stringify({ sub: "djelong-admin", exp: Date.now() + 8 * 60 * 60 * 1000 })).toString("base64url");
+  const signature = createHmac("sha256", process.env.JWT_SECRET).update(payload).digest("base64url");
+  return `${payload}.${signature}`;
 }
 
 function normalizeNews(input) {
@@ -87,9 +104,9 @@ export async function handler(event) {
     if (method === "POST" && path === "/auth/login") {
       const { email, password } = payload(event);
       const isValidEmail = email?.trim().toLowerCase() === process.env.ADMIN_EMAIL?.toLowerCase();
-      const isValidPassword = await bcrypt.compare(password ?? "", process.env.ADMIN_PASSWORD_HASH ?? "");
+      const isValidPassword = passwordIsValid(password);
       if (!isValidEmail || !isValidPassword) return json(401, { message: "E-mail ou mot de passe incorrect." });
-      const token = jwt.sign({ sub: "djelong-admin", email: process.env.ADMIN_EMAIL }, process.env.JWT_SECRET, { expiresIn: "8h" });
+      const token = createToken();
       return json(200, { token });
     }
 
@@ -135,7 +152,7 @@ export async function handler(event) {
     return json(405, { message: "Méthode non autorisée." });
   } catch (error) {
     console.error(error);
-    const message = error instanceof jwt.JsonWebTokenError ? "Session invalide ou expirée." : error instanceof Error ? error.message : "Erreur serveur.";
+    const message = error instanceof Error ? error.message : "Erreur serveur.";
     return json(message.includes("requis") || message.includes("champs") ? 400 : 500, { message });
   }
 }
