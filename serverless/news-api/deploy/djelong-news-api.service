@@ -1,0 +1,22 @@
+[Unit]
+Description=Djelong Papiers News API
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=djelong
+Group=djelong
+WorkingDirectory=/opt/djelong-news-api
+EnvironmentFile=/etc/djelong-news-api.env
+ExecStart=/usr/bin/node /opt/djelong-news-api/server.js
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/djelong-news-api
+
+[Install]
+WantedBy=multi-user.target

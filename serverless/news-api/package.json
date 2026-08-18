@@ -1,5 +1,10 @@
 {
   "name": "djelong-news-api",
   "private": true,
-  "type": "module"
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "esdk-obs-nodejs": "^3.26.2"
+  }
 }

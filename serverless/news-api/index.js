@@ -1,9 +1,12 @@
-import { createRequire } from "node:module";
-import { createHmac, randomUUID, scryptSync, timingSafeEqual } from "node:crypto";
-
-const require = createRequire(import.meta.url);
-// obs_client is provided by the Huawei FunctionGraph Node.js runtime.
-const ObsClient = require("obs_client");
+const { createHmac, randomUUID, scryptSync, timingSafeEqual } = require("node:crypto");
+const { mkdir, readFile, rename, writeFile } = require("node:fs/promises");
+const { dirname, extname, join } = require("node:path");
+let ObsClient;
+try {
+  ObsClient = require("obs_client");
+} catch {
+  ObsClient = require("esdk-obs-nodejs");
+}
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": process.env.ALLOWED_ORIGIN ?? "https://www.djelong.com",
@@ -24,6 +27,15 @@ const obs = new ObsClient({
 
 const bucket = process.env.OBS_BUCKET ?? "djelong-papiers-web-2026";
 const newsKey = "admin/news.json";
+const localNewsFile = process.env.NEWS_DATA_FILE;
+const initialNewsFile = process.env.INITIAL_NEWS_FILE;
+const uploadsDirectory = process.env.UPLOADS_DIR ?? "/opt/djelong-news-api/uploads";
+const publicApiUrl = (process.env.PUBLIC_API_URL ?? "https://api.djelong.com").replace(/\/$/, "");
+const imageExtensions = {
+  "image/jpeg": ".jpg",
+  "image/png": ".png",
+  "image/webp": ".webp",
+};
 
 function payload(event) {
   if (!event.body) return {};
@@ -78,24 +90,73 @@ function normalizeNews(input) {
 }
 
 async function readNews() {
+  if (localNewsFile) return readLocalNews();
   const result = await obs.getObject({ Bucket: bucket, Key: newsKey });
-  if (result.CommonMsg.Status === 404) return [];
-  if (result.CommonMsg.Status >= 300) throw new Error("Impossible de lire les actualités dans OBS.");
+  if (result.CommonMsg.Status === 404) return readLocalNews();
+  if (result.CommonMsg.Status >= 300) {
+    console.error("OBS getObject failed", {
+      status: result.CommonMsg.Status,
+      code: result.CommonMsg.Code,
+      message: result.CommonMsg.Message,
+    });
+    return readLocalNews();
+  }
   const content = result.InterfaceResult.Content;
   return JSON.parse(Buffer.isBuffer(content) ? content.toString("utf8") : String(content));
 }
 
 async function writeNews(items) {
+  if (localNewsFile) {
+    await writeLocalNews(items);
+    return;
+  }
   const result = await obs.putObject({
     Bucket: bucket,
     Key: newsKey,
     Body: JSON.stringify(items, null, 2),
     ContentType: "application/json; charset=utf-8",
   });
-  if (result.CommonMsg.Status >= 300) throw new Error("Impossible d'enregistrer les actualités dans OBS.");
+  if (result.CommonMsg.Status < 300) return;
+  await writeLocalNews(items);
 }
 
-export async function handler(event) {
+async function readLocalNews() {
+  if (!localNewsFile) throw new Error("Impossible de lire les actualités dans OBS.");
+  try {
+    const items = JSON.parse(await readFile(localNewsFile, "utf8"));
+    if (items.length || !initialNewsFile) return items;
+    return JSON.parse(await readFile(initialNewsFile, "utf8"));
+  } catch (error) {
+    if (error?.code === "ENOENT" && initialNewsFile) return JSON.parse(await readFile(initialNewsFile, "utf8"));
+    if (error?.code === "ENOENT") return [];
+    throw error;
+  }
+}
+
+async function writeLocalNews(items) {
+  if (!localNewsFile) throw new Error("Impossible d'enregistrer les actualités dans OBS.");
+  await mkdir(dirname(localNewsFile), { recursive: true });
+  const temporaryPath = `${localNewsFile}.tmp`;
+  await writeFile(temporaryPath, JSON.stringify(items, null, 2), "utf8");
+  await rename(temporaryPath, localNewsFile);
+}
+
+async function storeUpload(input) {
+  const mimeType = String(input.mimeType ?? "").toLowerCase();
+  const extension = imageExtensions[mimeType];
+  const content = String(input.content ?? "");
+  if (!extension || !content) throw new Error("Choisissez une image JPG, PNG ou WebP.");
+
+  const file = Buffer.from(content, "base64");
+  if (!file.length || file.length > 6 * 1024 * 1024) throw new Error("L'image doit faire moins de 6 Mo.");
+
+  await mkdir(uploadsDirectory, { recursive: true });
+  const filename = `${randomUUID()}${extension}`;
+  await writeFile(join(uploadsDirectory, filename), file);
+  return `${publicApiUrl}/uploads/${filename}`;
+}
+
+exports.handler = async function handler(event) {
   if (methodOf(event) === "OPTIONS") return { statusCode: 204, headers: corsHeaders, body: "" };
 
   try {
@@ -113,6 +174,12 @@ export async function handler(event) {
     if (method === "GET" && path === "/news") {
       const items = await readNews();
       return json(200, { items: items.filter((item) => item.status === "PUBLIE").sort((a, b) => String(b.publishedAt ?? "").localeCompare(String(a.publishedAt ?? ""))).map(({ content, ...item }) => item) });
+    }
+
+    if (method === "POST" && path === "/admin/uploads") {
+      verifiedAdmin(event);
+      const imageUrl = await storeUpload(payload(event));
+      return json(201, { imageUrl });
     }
 
     if (!path.startsWith("/admin/news")) return json(404, { message: "Route inconnue." });
@@ -155,4 +222,4 @@ export async function handler(event) {
     const message = error instanceof Error ? error.message : "Erreur serveur.";
     return json(message.includes("requis") || message.includes("champs") ? 400 : 500, { message });
   }
-}
+};

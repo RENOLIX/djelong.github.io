@@ -10,6 +10,7 @@ import {
   BarChart3,
   Building2,
   CheckCircle2,
+  ChevronDown,
   ClipboardCheck,
   Factory,
   FileText,
@@ -17,6 +18,7 @@ import {
   Layers3,
   Leaf,
   LockKeyhole,
+  ImageUp,
   Mail,
   MapPin,
   Menu,
@@ -39,10 +41,10 @@ import {
 gsap.registerPlugin(ScrollTrigger);
 
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
-const phone = "0563042689";
+const phone = "0563042728";
 const contactEmail = "contact@djelong-papiers.dz";
-const mapUrl = "https://maps.app.goo.gl/pBAKt9JCriRXg8vm6";
-const mapEmbedUrl = "https://maps.google.com/maps?hl=fr&q=35.4510029,2.906158%20(Djelong%20Papiers)&z=16&iwloc=B&output=embed";
+const mapUrl = "https://maps.app.goo.gl/zAZZtjYuU4ZGvjCv9?g_st=iw";
+const mapEmbedUrl = "https://maps.google.com/maps?hl=fr&q=EURL%20DJELONG%20PAPIERS%2C%20A%C3%AFn%20Oussara%2C%20ILOT%202010%20CITE%20SLIMANI%20SELIMANE&z=16&iwloc=B&output=embed";
 const newsApiUrl = import.meta.env.VITE_NEWS_API_URL?.replace(/\/$/, "") ?? "";
 
 const images = {
@@ -50,7 +52,28 @@ const images = {
   gate: asset("images/hero/djelong-factory-gate.png"),
   production: asset("images/hero/paper-production-line.png"),
   logistics: asset("images/hero/paper-logistics-warehouse.png"),
-  activity: asset("images/sections/paper-transformation-activity-precision.png"),
+  activity: asset("images/djelong-media/IMG-20260723-WA0004.jpg"),
+  company: asset("images/djelong-media/IMG-20260723-WA0008.jpg"),
+  quality: asset("images/djelong-media/IMG-20260723-WA0009.jpg"),
+  workshop: asset("images/djelong-media/IMG-20260723-WA0010.jpg"),
+  storage: asset("images/djelong-media/IMG-20260723-WA0012.jpg"),
+  delivery: asset("images/djelong-media/IMG-20260723-WA0013.jpg"),
+  video: asset("images/djelong-media/VID-20260723-WA0034.mp4"),
+};
+
+const galleryPhotos = [
+  "IMG-20260723-WA0004.jpg", "IMG-20260723-WA0008.jpg", "IMG-20260723-WA0009.jpg", "IMG-20260723-WA0010.jpg",
+  "IMG-20260723-WA0012.jpg", "IMG-20260723-WA0013.jpg", "IMG-20260723-WA0014.jpg", "IMG-20260723-WA0015.jpg",
+  "IMG-20260723-WA0019.jpg", "IMG-20260723-WA0020.jpg", "IMG-20260723-WA0021.jpg", "IMG-20260723-WA0022.jpg",
+  "IMG-20260723-WA0023.jpg", "IMG-20260723-WA0024.jpg", "IMG-20260723-WA0026.jpg", "IMG-20260723-WA0027.jpg",
+  "IMG-20260723-WA0028.jpg", "IMG-20260723-WA0037.jpg", "IMG-20260723-WA0038.jpg", "IMG-20260723-WA0040.jpg",
+  "IMG-20260723-WA0041.jpg", "IMG-20260723-WA0042.jpg", "IMG-20260723-WA0043.jpg", "IMG-20260723-WA0044.jpg",
+].map((name) => asset(`images/djelong-media/${name}`));
+
+const paperSpecifications = {
+  types: ["Testliner", "Fluting"],
+  weights: [90, 100, 110, 120, 130, 150],
+  widths: [850, 900, 1000, 1050, 1100, 1250, 1300, 1400, 1410, 1450, 1500, 1600, 1700, 1900, 1950, 2000, 2050, 2100, 2110, 2150, 2160, 2200, 2220, 2250, 2300, 2310, 2350, 2400, 2450, 2500],
 };
 
 const navItems = [
@@ -61,6 +84,11 @@ const navItems = [
   { label: "Durabilité", path: "/durabilite" },
   { label: "Investisseurs", path: "/investisseurs" },
   { label: "Contact", path: "/contact" },
+];
+
+const aboutSubItems = [
+  { label: "Histoire", path: "/a-propos/histoire" },
+  { label: "Message du PDG", path: "/a-propos/message-du-pdg" },
 ];
 
 const heroSlides = [
@@ -86,13 +114,13 @@ const heroSlides = [
 
 const productLines = [
   {
-    title: "Papier destiné à la transformation",
-    text: "Supports papier pour découpe, façonnage, intercalaires, bobinage, emballage et besoins techniques.",
+    title: "Papier testliner",
+    text: "Papier pour couverture et applications d'emballage, proposé selon les grammages et laizes disponibles.",
     icon: Layers3,
   },
   {
-    title: "Produits papier pour professionnels",
-    text: "Articles papier destinés aux entreprises, distributeurs, administrations, commerces et usages de service.",
+    title: "Papier fluting",
+    text: "Support destiné à la cannelure et aux solutions d'emballage, avec préparation adaptée au besoin industriel.",
     icon: PackageCheck,
   },
   {
@@ -147,19 +175,19 @@ const roadmap = [
 
 const news = [
   {
-    image: images.production,
+    image: images.quality,
     date: "Juillet 2026",
     title: "Mise en avant de l'identité Djelong Papiers",
     text: "La nouvelle présence digitale présente l'activité de transformation industrielle, les engagements qualité et les services pour clients professionnels.",
   },
   {
-    image: images.logistics,
+    image: images.storage,
     date: "Juin 2026",
     title: "Organisation commerciale et logistique",
     text: "Djelong Papiers structure la présentation de ses services pour faciliter les demandes de prix, les commandes et les projets sur mesure.",
   },
   {
-    image: images.gate,
+    image: images.company,
     date: "Mai 2026",
     title: "Communication autour du site industriel",
     text: "Les pages corporate valorisent la production, le stockage, la durabilité, la qualité et les contacts utiles pour les partenaires.",
@@ -555,7 +583,28 @@ function Header() {
 
           <div className="header-right">
             <nav className="hidden items-center gap-1 lg:flex">
-              {navItems.map((item) => (
+              {navItems.map((item) => item.path === "/a-propos" ? (
+                <div key={item.path} className="nav-dropdown">
+                  <NavLink
+                    to={item.path}
+                    className={({ isActive }: { isActive: boolean }) =>
+                      `nav-dropdown-trigger relative px-3 py-2 text-sm font-bold transition ${
+                        isActive
+                          ? "text-[#17492f] after:absolute after:inset-x-3 after:-bottom-1 after:h-[2px] after:bg-[#17492f] after:content-['']"
+                          : "text-[#274b38] hover:text-[#17492f]"
+                      }`
+                    }
+                  >
+                    <span>{item.label}</span>
+                    <ChevronDown size={14} aria-hidden="true" />
+                  </NavLink>
+                  <div className="nav-dropdown-menu">
+                    {aboutSubItems.map((subItem) => (
+                      <NavLink key={subItem.path} to={subItem.path} end className={({ isActive }) => clsx("nav-dropdown-link", isActive && "is-active")}>{subItem.label}</NavLink>
+                    ))}
+                  </div>
+                </div>
+              ) : (
                 <NavLink
                   key={item.path}
                   to={item.path}
@@ -585,7 +634,22 @@ function Header() {
 
       {open && (
         <nav className="mobile-nav lg:hidden">
-          {navItems.map((item) => (
+          {navItems.map((item) => item.path === "/a-propos" ? (
+            <div key={item.path} className="mobile-about-group">
+              <p className="px-3 pt-3 text-xs font-black uppercase text-[#6d8377]">À propos</p>
+              {aboutSubItems.map((subItem) => (
+                <NavLink
+                  key={subItem.path}
+                  to={subItem.path}
+                  end
+                  onClick={() => setOpen(false)}
+                  className={({ isActive }) => clsx("mobile-subnav-link", isActive && "is-active")}
+                >
+                  {subItem.label}
+                </NavLink>
+              ))}
+            </div>
+          ) : (
             <NavLink
               key={item.path}
               to={item.path}
@@ -686,6 +750,125 @@ function SoftCard({ icon: Icon, title, text }: { icon: LucideIcon; title: string
   );
 }
 
+function PaperSpecifications() {
+  return (
+    <section className="bg-[#eff5f0] px-5 py-24 sm:px-8">
+      <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.88fr_1.12fr] lg:items-start">
+        <div className="reveal overflow-hidden rounded-lg shadow-[0_20px_60px_rgba(19,63,42,0.12)] lg:sticky lg:top-32 lg:self-start">
+          <img src={images.quality} alt="Papier Djelong Papiers" className="h-[360px] w-full object-cover" />
+        </div>
+        <div className="reveal">
+          <p className="text-sm font-black uppercase text-[#2c7a4b]">Spécifications papier</p>
+          <h2 className="mt-3 text-4xl font-black text-[#133f2a] sm:text-5xl">Des références préparées selon votre besoin.</h2>
+          <p className="mt-5 max-w-2xl text-lg leading-8 text-[#536a5e]">Djelong Papiers propose des papiers destinés à l'emballage et à la transformation, avec des formats à valider selon la disponibilité et votre cahier des charges.</p>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+            <div className="btn-card p-6"><p className="text-sm font-black uppercase text-[#2c7a4b]">Types</p><p className="mt-3 text-2xl font-black text-[#133f2a]">{paperSpecifications.types.join(" / ")}</p></div>
+            <div className="btn-card p-6"><p className="text-sm font-black uppercase text-[#2c7a4b]">Grammages</p><p className="mt-3 text-2xl font-black text-[#133f2a]">{paperSpecifications.weights.join(" - ")} g</p></div>
+          </div>
+          <div className="btn-card mt-4 p-6">
+            <p className="text-sm font-black uppercase text-[#2c7a4b]">Laizes disponibles</p>
+            <div className="mt-4 flex flex-wrap gap-2">{paperSpecifications.widths.map((width) => <span key={width} className="rounded-md bg-[#dbeee0] px-3 py-2 text-sm font-black text-[#17492f]">{width} mm</span>)}</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function MediaGallery() {
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const titleRef = useRef<HTMLDivElement | null>(null);
+  const gridRef = useRef<HTMLUListElement | null>(null);
+
+  useLayoutEffect(() => {
+    const section = sectionRef.current;
+    const title = titleRef.current;
+    if (!section || !title) return;
+
+    const context = gsap.context(() => {
+      const words = title.querySelectorAll<HTMLElement>("[data-gallery-word]");
+      gsap.set(words, { y: "calc(100% + 0.75em)" });
+      gsap.to(words, {
+        y: 0,
+        duration: 1.4,
+        stagger: 0.1,
+        ease: "expo.out",
+        scrollTrigger: {
+          trigger: title,
+          start: "top 90%",
+          once: true,
+        },
+      });
+    }, section);
+
+    return () => context.revert();
+  }, []);
+
+  useEffect(() => {
+    const grid = gridRef.current;
+    if (!grid) return;
+
+    let frame = 0;
+    let previousY = window.scrollY;
+    let previousTime = performance.now();
+    let speed = 0;
+    let offset = 0;
+
+    const animate = (time: number) => {
+      const elapsed = Math.max(time - previousTime, 1);
+      const currentY = window.scrollY;
+      speed = (currentY - previousY) / elapsed;
+      offset += (40 * speed - offset) * Math.min(1, 0.0075 * elapsed);
+      speed *= Math.pow(0.4, elapsed / (1000 / 60));
+      grid.style.setProperty("--gallery-y", `${offset.toFixed(4)}px`);
+      previousY = currentY;
+      previousTime = time;
+      frame = requestAnimationFrame(animate);
+    };
+
+    if (window.matchMedia("(min-width: 769px) and (prefers-reduced-motion: no-preference)").matches) {
+      frame = requestAnimationFrame(animate);
+    }
+
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
+  return (
+    <section ref={sectionRef} className="media-gallery">
+      <div ref={titleRef} className="gallery-large-title">
+        <p className="gallery-uptitle">
+          <span className="gallery-word-mask"><em data-gallery-word>notre</em></span>{" "}
+          <span className="gallery-word-mask"><strong data-gallery-word>SAVOIR-FAIRE</strong></span>
+        </p>
+        <h2 className="gallery-title">
+          <span className="gallery-title-line">
+            <span className="gallery-word-mask"><em data-gallery-word>transforme la</em></span>{" "}
+            <span className="gallery-word-mask"><strong data-gallery-word>MATIÈRE</strong></span>
+          </span>
+          <span className="gallery-title-line">
+            <span className="gallery-word-mask"><em data-gallery-word>en une</em></span>{" "}
+            <span className="gallery-word-mask"><strong data-gallery-word>SIGNATURE.</strong></span>
+          </span>
+        </h2>
+      </div>
+
+      <div className="gallery-grid-push">
+        <ul ref={gridRef} className="gallery-vero-grid">
+          {galleryPhotos.map((image, index) => (
+            <li key={image} className="gallery-vero-item">
+              <figure>
+                <div className="gallery-vero-media"><img src={image} alt={`Djelong Papiers - galerie ${index + 1}`} loading="lazy" /></div>
+                <figcaption><span>Djelong Papiers</span></figcaption>
+              </figure>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+    </section>
+  );
+}
+
 function HomePage() {
   useScrollReveal();
 
@@ -727,6 +910,8 @@ function HomePage() {
         </div>
       </section>
 
+      <PaperSpecifications />
+
       <section className="bg-[#133f2a] px-5 py-24 text-white sm:px-8">
         <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
           <div className="reveal">
@@ -750,7 +935,7 @@ function HomePage() {
       <section className="px-5 py-24 sm:px-8">
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1fr_0.9fr] lg:items-center">
           <div className="reveal overflow-hidden rounded-lg">
-            <img src={images.production} alt="Ligne de production papier Djelong" className="h-[560px] w-full object-cover" />
+            <img src={images.workshop} alt="Atelier Djelong Papiers" className="h-[560px] w-full object-cover" />
           </div>
           <div className="btn-card reveal p-7">
             <p className="text-sm font-black uppercase text-[#2c7a4b]">Production</p>
@@ -763,6 +948,7 @@ function HomePage() {
       </section>
 
       <RoadmapBlock />
+      <MediaGallery />
       <NewsPreview />
       <ContactSection />
     </>
@@ -925,8 +1111,9 @@ function ContactSection() {
             />
             <a href={mapUrl} target="_blank" rel="noreferrer" className="map-pin-label">
               <MapPin size={17} />
-              Djelong Papiers
+              EURL DJELONG PAPIERS
             </a>
+            <p className="mt-4 text-sm font-bold text-[#536a5e]">Aïn Oussara, ILOT 2010 Cité Slimani Selimane</p>
           </div>
         </div>
 
@@ -967,13 +1154,13 @@ function AboutPage() {
   useScrollReveal();
   return (
     <>
-      <PageHero title="À propos de Djelong Papiers" subtitle="Une entreprise de transformation industrielle du papier avec une identité claire, verte et professionnelle." image={images.gate} icon={Building2} />
+      <PageHero title="À propos de Djelong Papiers" subtitle="Une entreprise de transformation industrielle du papier avec une identité claire, verte et professionnelle." icon={Building2} />
       <section className="px-5 py-20 sm:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="reveal grid gap-5 lg:grid-cols-2">
             <Link to="/a-propos/message-du-pdg" className="group overflow-hidden bg-white/82 shadow-[0_18px_48px_rgba(19,63,42,0.12)] transition hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(19,63,42,0.18)] rounded-lg">
               <div className="grid gap-0 md:grid-cols-[0.78fr_1fr]">
-                <img src={images.production} alt="" className="h-64 w-full object-cover md:h-full" />
+                <img src={images.workshop} alt="" className="h-64 w-full object-cover md:h-full" />
                 <div className="p-7">
                   <p className="text-sm font-black uppercase text-[#2c7a4b]">Sous-catégorie</p>
                   <h2 className="mt-3 text-3xl font-black text-[#133f2a]">Message du PDG</h2>
@@ -985,7 +1172,7 @@ function AboutPage() {
 
             <Link to="/a-propos/histoire" className="group overflow-hidden bg-white/82 shadow-[0_18px_48px_rgba(19,63,42,0.12)] transition hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(19,63,42,0.18)] rounded-lg">
               <div className="grid gap-0 md:grid-cols-[0.78fr_1fr]">
-                <img src={images.logistics} alt="" className="h-64 w-full object-cover md:h-full" />
+                <img src={images.storage} alt="" className="h-64 w-full object-cover md:h-full" />
                 <div className="p-7">
                   <p className="text-sm font-black uppercase text-[#2c7a4b]">Sous-catégorie</p>
                   <h2 className="mt-3 text-3xl font-black text-[#133f2a]">Histoire</h2>
@@ -1014,11 +1201,11 @@ function PdgMessagePage() {
   useScrollReveal();
   return (
     <>
-      <PageHero title="Message du PDG" subtitle="Une vision industrielle claire : produire avec rigueur, servir avec confiance et construire une marque papier durable." image={images.production} icon={Quote} />
+      <PageHero title="Message du PDG" subtitle="Une vision industrielle claire : produire avec rigueur, servir avec confiance et construire une marque papier durable." icon={Quote} />
       <section className="px-5 py-20 sm:px-8">
         <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.8fr_1.2fr]">
           <aside className="reveal overflow-hidden bg-[#0b2f20] text-white shadow-[0_24px_70px_rgba(11,47,32,0.22)] rounded-lg">
-            <img src={images.gate} alt="" className="h-72 w-full object-cover opacity-85" />
+            <img src={images.company} alt="" className="h-72 w-full object-cover opacity-85" />
             <div className="p-7">
               <p className="text-sm font-black uppercase text-white/62">Direction générale</p>
               <h2 className="mt-3 text-3xl font-black">Djelong Papiers</h2>
@@ -1063,23 +1250,23 @@ function HistoryPage() {
     {
       title: "Une naissance autour de la matière papier",
       text: "Djelong Papiers s'est construite autour d'une idée simple : donner au papier une transformation industrielle propre, lisible et adaptée aux besoins des professionnels. L'entreprise a placé dès le départ la régularité, le format et le conditionnement au centre de son organisation.",
-      image: images.gate,
+      image: images.company,
     },
     {
       title: "L'atelier comme cœur de la confiance",
       text: "La croissance s'est organisée autour de gestes maîtrisés : réception, préparation, découpe, façonnage, contrôle et emballage. Chaque étape a été pensée pour réduire l'improvisation et donner aux clients une lecture claire de la qualité attendue.",
-      image: images.production,
+      image: images.workshop,
     },
     {
       title: "Une logistique pensée pour les commandes B2B",
       text: "Avec l'élargissement des besoins, Djelong Papiers a renforcé la préparation des lots, l'étiquetage, le stockage et la coordination commerciale. L'objectif : faciliter les commandes répétées, les volumes professionnels et les demandes spécifiques.",
-      image: images.logistics,
+      image: images.delivery,
     },
   ];
 
   return (
     <>
-      <PageHero title="Histoire de Djelong Papiers" subtitle="Une histoire industrielle écrite autour du papier, de la discipline de production et d'une ambition ouverte sur les standards internationaux." image={images.logistics} icon={Factory} />
+      <PageHero title="Histoire de Djelong Papiers" subtitle="Une histoire industrielle écrite autour du papier, de la discipline de production et d'une ambition ouverte sur les standards internationaux." icon={Factory} />
       <section className="px-5 py-20 sm:px-8">
         <div className="mx-auto grid max-w-7xl gap-12">
           {storyBlocks.map((block, index) => (
@@ -1115,11 +1302,11 @@ function HistoryPage() {
   );
 }
 
-function PageHero({ title, subtitle, image, icon: Icon }: { title: string; subtitle: string; image: string; icon: LucideIcon }) {
+function PageHero({ title, subtitle, icon: Icon }: { title: string; subtitle: string; icon: LucideIcon }) {
   return (
-    <section className="relative min-h-[60svh] overflow-hidden bg-[#0b2f20] px-5 pb-16 pt-44 text-white sm:px-8 sm:pt-48">
-      <img src={image} alt="" className="absolute inset-0 h-full w-full object-cover opacity-70" />
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,30,19,0.72),rgba(5,30,19,0.28))]" />
+    <section className="page-hero relative min-h-[52svh] overflow-hidden px-5 pb-16 pt-44 text-white sm:px-8 sm:pt-48">
+      <div className="page-hero-roll page-hero-roll-one" />
+      <div className="page-hero-roll page-hero-roll-two" />
       <div className="relative mx-auto max-w-7xl">
         <div className="reveal grid h-14 w-14 place-items-center bg-white/12 backdrop-blur-xl rounded-lg">
           <Icon size={26} />
@@ -1131,12 +1318,47 @@ function PageHero({ title, subtitle, image, icon: Icon }: { title: string; subti
   );
 }
 
+function SitesPage() {
+  const steps = [
+    ["01", "Réception et préparation", "Les supports papier et commandes entrantes sont identifiés, orientés et préparés avant le lancement d'une série."],
+    ["02", "Transformation", "Les opérations sont organisées par format, usage, séquence de travail et exigences de conditionnement."],
+    ["03", "Contrôle de présentation", "L'équipe vérifie visuellement l'aspect, la régularité, la propreté et la cohérence des lots préparés."],
+    ["04", "Stockage et expédition", "Les commandes validées sont regroupées, étiquetées et préparées pour retrait ou livraison professionnelle."],
+  ];
+  return <>
+    <PageHero title="Sites et organisation" subtitle="Un fonctionnement lisible, de la préparation matière à la remise de commande." icon={MapPin} />
+    <section className="px-5 py-24 sm:px-8"><div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-2 lg:items-center"><div className="reveal"><p className="text-sm font-black uppercase text-[#2c7a4b]">Un même cap opérationnel</p><h2 className="mt-3 text-4xl font-black text-[#133f2a] sm:text-5xl">Des zones pensées pour faire circuler le papier avec méthode.</h2><p className="mt-6 text-lg leading-9 text-[#536a5e]">Chez Djelong Papiers, chaque zone répond à une fonction précise : réceptionner, transformer, vérifier, conditionner puis mettre à disposition. Cette organisation donne aux interlocuteurs commerciaux une lecture simple de l'avancement de leur demande.</p><div className="mt-8 grid gap-3 sm:grid-cols-2">{["Référent commercial", "Préparation de série", "Contrôle de lot", "Suivi de commande"].map(item => <div key={item} className="flex items-center gap-2 font-black text-[#17492f]"><CheckCircle2 size={18} />{item}</div>)}</div></div><img src={images.storage} alt="Organisation et stockage Djelong" className="reveal h-[420px] w-full rounded-lg object-cover shadow-[0_20px_60px_rgba(19,63,42,0.14)]" /></div></section>
+    <section className="bg-[#eff5f0] px-5 py-24 sm:px-8"><div className="mx-auto max-w-7xl"><SectionTitle eyebrow="Parcours opérationnel" title="Quatre temps, un seul niveau d'exigence." text="L'organisation est conçue pour fiabiliser les échanges, les formats et la présentation finale des produits." /><div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4">{steps.map(([number,title,text]) => <article key={number} className="btn-card reveal p-7"><span className="text-4xl font-black text-[#8ac59a]">{number}</span><h3 className="mt-8 text-2xl font-black text-[#133f2a]">{title}</h3><p className="mt-4 leading-8 text-[#536a5e]">{text}</p></article>)}</div></div></section>
+    <section className="px-5 py-24 sm:px-8"><div className="mx-auto max-w-7xl"><div className="grid gap-6 md:grid-cols-3"><img src={galleryPhotos[5]} alt="Djelong Papiers" className="reveal h-80 w-full rounded-lg object-cover" /><img src={galleryPhotos[10]} alt="Djelong Papiers" className="reveal h-80 w-full rounded-lg object-cover" /><img src={galleryPhotos[15]} alt="Djelong Papiers" className="reveal h-80 w-full rounded-lg object-cover" /></div><div className="reveal mt-10 bg-[#133f2a] p-8 text-white rounded-lg sm:p-10"><p className="text-sm font-black uppercase text-[#a7d8ad]">Service professionnel</p><h2 className="mt-3 max-w-4xl text-3xl font-black sm:text-5xl">Une organisation conçue pour les commandes récurrentes comme pour les demandes spécifiques.</h2><p className="mt-5 max-w-3xl leading-8 text-white/75">Format, quantité, usage, conditionnement et délai peuvent être discutés dès le premier échange afin de préparer une réponse commerciale claire et exploitable.</p></div></div></section>
+  </>;
+}
+
+function SustainabilityPage() {
+  const commitments = [["Réduire les pertes évitables", "Mieux préparer les séries pour limiter les reprises, les découpes inutiles et les écarts de présentation."], ["Valoriser l'organisation", "Structurer les zones et les lots afin de simplifier les manipulations, le stockage et les contrôles."], ["Produire avec justesse", "Adapter les formats et conditionnements au besoin réellement exprimé par le client."], ["Améliorer en continu", "Identifier les retours terrain, ajuster les habitudes de travail et renforcer les points de contrôle utiles."]];
+  return <>
+    <PageHero title="Durabilité" subtitle="Une responsabilité concrète : mieux préparer, mieux transformer et mieux organiser la matière papier." icon={Leaf} />
+    <section className="px-5 py-24 sm:px-8"><div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.04fr_0.96fr] lg:items-center"><img src={images.quality} alt="Djelong Papiers et la qualité" className="reveal h-[440px] w-full rounded-lg object-cover" /><div className="reveal"><p className="text-sm font-black uppercase text-[#2c7a4b]">Une démarche réaliste</p><h2 className="mt-3 text-4xl font-black text-[#133f2a] sm:text-5xl">La durabilité commence par une production mieux tenue.</h2><p className="mt-6 text-lg leading-9 text-[#536a5e]">Djelong Papiers présente la durabilité comme une discipline d'atelier : éviter ce qui peut l'être, organiser les opérations, protéger la qualité du papier et donner au client des produits cohérents avec son usage.</p><p className="mt-4 leading-8 text-[#536a5e]">Cette page décrit des axes de progrès et des engagements de travail. Les indicateurs chiffrés seront publiés lorsque les relevés internes auront été consolidés.</p></div></div></section>
+    <section className="bg-[#eff5f0] px-5 py-24 sm:px-8"><div className="mx-auto max-w-7xl"><SectionTitle eyebrow="Engagements" title="Transformer avec davantage de maîtrise." text="Des pratiques utiles, mesurables et adaptées au quotidien d'une activité papier." /><div className="mt-12 grid gap-5 md:grid-cols-2">{commitments.map(([title,text],index) => <article key={title} className="btn-card reveal flex gap-5 p-7"><span className="grid h-11 w-11 shrink-0 place-items-center bg-[#17492f] text-lg font-black text-white rounded-lg">0{index + 1}</span><div><h3 className="text-2xl font-black text-[#133f2a]">{title}</h3><p className="mt-3 leading-8 text-[#536a5e]">{text}</p></div></article>)}</div></div></section>
+    <section className="px-5 py-24 sm:px-8"><div className="mx-auto max-w-7xl"><div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]"><div className="reveal bg-[#133f2a] p-8 text-white rounded-lg sm:p-10"><p className="text-sm font-black uppercase text-[#a7d8ad]">Référentiel de suivi</p><h2 className="mt-3 text-3xl font-black sm:text-5xl">Les sujets suivis dans l'atelier.</h2><div className="mt-8 grid gap-4">{["Organisation des formats et des chutes", "Qualité de conditionnement", "Propreté des zones de travail", "Regroupement et rotation des lots", "Remontées clients et actions correctives"].map(item => <div key={item} className="flex items-center gap-3 border-b border-white/15 pb-4 font-bold"><CheckCircle2 size={19} className="text-[#a7d8ad]" />{item}</div>)}</div></div><img src={images.workshop} alt="Atelier Djelong" className="reveal h-full min-h-[400px] w-full rounded-lg object-cover" /></div></div></section>
+  </>;
+}
+
+function InvestorsPage() {
+  const pillars = [["Marché", "L'emballage et les usages professionnels du papier reposent sur des besoins concrets : continuité d'approvisionnement, formats adaptés et relation commerciale fiable."], ["Capacité", "Le développement passe par la structuration progressive des gammes, des procédés et de la préparation des commandes."], ["Partenariats", "Djelong Papiers recherche des relations durables avec fournisseurs, distributeurs, clients professionnels et partenaires industriels."], ["Gouvernance", "La priorité est donnée à une organisation lisible : demandes tracées, responsabilités claires et décisions fondées sur les besoins opérationnels."]];
+  return <>
+    <PageHero title="Investisseurs et partenaires" subtitle="Une vision industrielle fondée sur le papier, le service B2B et la construction de partenariats durables." icon={BarChart3} />
+    <section className="px-5 py-24 sm:px-8"><div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-2 lg:items-center"><div className="reveal"><p className="text-sm font-black uppercase text-[#2c7a4b]">La thèse Djelong</p><h2 className="mt-3 text-4xl font-black text-[#133f2a] sm:text-5xl">Développer une entreprise papier fiable, proche du besoin terrain.</h2><p className="mt-6 text-lg leading-9 text-[#536a5e]">Djelong Papiers se positionne sur la transformation industrielle, les solutions d'emballage et la préparation de produits papier pour les professionnels. L'ambition est d'assembler savoir-faire de production, exigence de présentation et capacité de dialogue commercial.</p><p className="mt-4 leading-8 text-[#536a5e]">Cette page présente le projet d'entreprise et ses axes de développement. Elle ne constitue pas une offre financière ni une promesse de rendement.</p></div><img src={images.company} alt="Djelong Papiers" className="reveal h-[420px] w-full rounded-lg object-cover" /></div></section>
+    <section className="bg-[#eff5f0] px-5 py-24 sm:px-8"><div className="mx-auto max-w-7xl"><SectionTitle eyebrow="Axes de création de valeur" title="Quatre leviers pour consolider le projet." text="Une approche construite autour de la demande industrielle, de l'exécution et de la qualité de relation." /><div className="mt-12 grid gap-5 md:grid-cols-2">{pillars.map(([title,text]) => <article key={title} className="btn-card reveal p-8"><h3 className="text-3xl font-black text-[#133f2a]">{title}</h3><p className="mt-4 leading-8 text-[#536a5e]">{text}</p></article>)}</div></div></section>
+    <section className="px-5 py-24 sm:px-8"><div className="mx-auto max-w-7xl"><div className="reveal overflow-hidden rounded-lg bg-[#0b2f20] p-8 text-white sm:p-10"><p className="text-sm font-black uppercase text-[#a7d8ad]">Feuille de route</p><div className="mt-7 grid gap-6 md:grid-cols-3">{[["Structurer", "Clarifier les gammes, les spécifications, les demandes de devis et les outils de présentation."], ["Développer", "Étendre les relations commerciales, consolider la distribution et étudier les demandes à valeur ajoutée."], ["Pérenniser", "Renforcer les habitudes de qualité, les échanges partenaires et les repères de pilotage internes."]].map(([title,text],index) => <div key={title} className="border-t border-white/20 pt-5"><span className="text-2xl font-black text-[#a7d8ad]">0{index + 1}</span><h3 className="mt-4 text-2xl font-black">{title}</h3><p className="mt-3 leading-7 text-white/72">{text}</p></div>)}</div></div><div className="mt-10 grid gap-6 md:grid-cols-2"><img src={images.delivery} alt="Djelong Papiers" className="reveal h-80 w-full rounded-lg object-cover" /><div className="btn-card reveal p-8"><p className="text-sm font-black uppercase text-[#2c7a4b]">Parlons partenariat</p><h2 className="mt-3 text-3xl font-black text-[#133f2a]">Un projet à construire avec des interlocuteurs qui connaissent l'industrie.</h2><p className="mt-5 leading-8 text-[#536a5e]">Pour une discussion commerciale, industrielle ou de partenariat, l'équipe Djelong Papiers est joignable par téléphone ou via le formulaire de contact.</p><Link to="/contact" className="mt-7 inline-flex items-center gap-2 bg-[#17492f] px-5 py-3 font-black text-white rounded-lg">Contacter Djelong <ArrowRight size={18} /></Link></div></div></div></section>
+  </>;
+}
+
 function SimplePage({ type }: { type: "actualites" | "sites" | "durabilite" | "investisseurs" | "contact" }) {
   useScrollReveal();
   if (type === "actualites") {
     return (
       <>
-        <PageHero title="Actualités" subtitle="La communication officielle de Djelong Papiers : production, organisation, qualité et relation client." image={images.logistics} icon={Newspaper} />
+        <PageHero title="Actualités" subtitle="La communication officielle de Djelong Papiers : production, organisation, qualité et relation client." icon={Newspaper} />
         <NewsPreview />
       </>
     );
@@ -1144,55 +1366,12 @@ function SimplePage({ type }: { type: "actualites" | "sites" | "durabilite" | "i
   if (type === "contact") {
     return (
       <>
-        <PageHero title="Contact" subtitle="Un formulaire clair, un téléphone direct et une carte Google Maps pour localiser l'entreprise." image={images.gate} icon={Mail} />
+        <PageHero title="Contact" subtitle="Un formulaire clair, un téléphone direct et une carte Google Maps pour localiser l'entreprise." icon={Mail} />
         <ContactSection />
       </>
     );
   }
-  const pageData = {
-    sites: {
-      title: "Sites et organisation",
-      subtitle: "Présentation des zones clés : réception matière, production, contrôle, stockage et expédition.",
-      image: images.logistics,
-      icon: MapPin,
-      blocks: [
-        ["Réception matière", "Préparation et vérification des supports papier avant transformation."],
-        ["Atelier de transformation", "Zone dédiée aux opérations de découpe, façonnage, préparation et conditionnement."],
-        ["Contrôle", "Vérification de l'aspect, des dimensions, de la propreté et de la conformité de présentation."],
-        ["Expédition", "Préparation des lots, palettes et commandes destinées aux clients professionnels."],
-      ],
-    },
-    durabilite: {
-      title: "Durabilité",
-      subtitle: "Une logique plus responsable : valoriser la matière, limiter les pertes et améliorer l'organisation.",
-      image: images.production,
-      icon: Leaf,
-      blocks: sustainability.map((item) => [item.title, item.text]),
-    },
-    investisseurs: {
-      title: "Investisseurs et partenaires",
-      subtitle: "Une lecture corporate pour comprendre le positionnement, les axes de croissance et la vision Djelong.",
-      image: images.logo,
-      icon: BarChart3,
-      blocks: investorBlocks.map((item) => [item.title, item.text]),
-    },
-  }[type];
-
-  return (
-    <>
-      <PageHero title={pageData.title} subtitle={pageData.subtitle} image={pageData.image} icon={pageData.icon} />
-      <section className="px-5 py-20 sm:px-8">
-        <div className="mx-auto grid max-w-7xl gap-5 md:grid-cols-2">
-          {pageData.blocks.map(([title, text]) => (
-            <article key={title} className="btn-card reveal p-6">
-              <h3 className="text-2xl font-black text-[#133f2a]">{title}</h3>
-              <p className="mt-3 leading-8 text-[#536a5e]">{text}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-    </>
-  );
+  return type === "sites" ? <SitesPage /> : type === "durabilite" ? <SustainabilityPage /> : <InvestorsPage />;
 }
 
 function NotFound() {
@@ -1243,13 +1422,14 @@ function Footer() {
           <div className="mt-4 grid gap-3 text-white/72">
             <a href={`tel:${phone}`} className="hover:text-white">{phone}</a>
             <a href={mapUrl} target="_blank" rel="noreferrer" className="hover:text-white">Google Maps</a>
-            <span>Djelong Papiers</span>
+            <span>EURL DJELONG PAPIERS</span>
+            <span>Aïn Oussara, ILOT 2010 Cité Slimani Selimane</span>
           </div>
         </div>
       </div>
       <div className="mx-auto mt-10 flex max-w-7xl flex-col justify-between gap-3 border-t border-white/12 pt-6 text-sm text-white/56 md:flex-row">
         <span>© 2026 Djelong Papiers. Tous droits réservés.</span>
-        <span>Site corporate React + GitHub Pages.</span>
+        <span>Site officiel hébergé sur Huawei Cloud.</span>
       </div>
     </footer>
   );
@@ -1272,7 +1452,7 @@ const emptyNewsDraft: NewsDraft = {
   title: "",
   excerpt: "",
   content: "",
-  coverImage: images.production,
+  coverImage: "",
   status: "BROUILLON",
   publishedAt: null,
 };
@@ -1295,6 +1475,21 @@ async function adminRequest<T>(path: string, token: string, options: RequestInit
   return (await response.json()) as T;
 }
 
+async function uploadNewsImage(file: File, token: string) {
+  if (!file.type.startsWith("image/")) throw new Error("Choisis un fichier image.");
+  if (file.size > 6 * 1024 * 1024) throw new Error("L'image doit faire moins de 6 Mo.");
+  const content = await new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result).split(",")[1] ?? "");
+    reader.onerror = () => reject(new Error("Lecture de l'image impossible."));
+    reader.readAsDataURL(file);
+  });
+  return adminRequest<{ imageUrl: string }>("/admin/uploads", token, {
+    method: "POST",
+    body: JSON.stringify({ mimeType: file.type, content }),
+  });
+}
+
 function AdminPortal() {
   const [token, setToken] = useState(() => sessionStorage.getItem("djelong-admin-token") ?? "");
   const [email, setEmail] = useState("");
@@ -1304,6 +1499,7 @@ function AdminPortal() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [notice, setNotice] = useState("");
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   const loadNews = async (currentToken = token) => {
     const payload = await adminRequest<{ items: ManagedNews[] }>("/admin/news", currentToken);
@@ -1376,11 +1572,28 @@ function AdminPortal() {
 
   const updateDraft = <Key extends keyof NewsDraft>(key: Key, value: NewsDraft[Key]) => setDraft((current) => ({ ...current, [key]: value }));
 
+  const selectCoverImage = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    setNotice("");
+    try {
+      const payload = await uploadNewsImage(file, token);
+      updateDraft("coverImage", payload.imageUrl);
+      setNotice("Image téléversée. Elle sera utilisée pour cette actualité.");
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : "Téléversement impossible.");
+    } finally {
+      setUploading(false);
+      event.target.value = "";
+    }
+  };
+
   if (!token) {
     return (
       <main className="admin-shell">
         <section className="admin-login">
-          <div className="admin-mark"><LockKeyhole size={24} /></div>
+          <div className="admin-mark"><img src={images.logo} alt="Djelong Papiers" /></div>
           <p className="admin-eyebrow">DJELONG PAPIERS</p>
           <h1>Administration des actualités</h1>
           <p>Un accès réservé pour publier la communication officielle de l'entreprise.</p>
@@ -1400,7 +1613,7 @@ function AdminPortal() {
     <main className="admin-shell">
       <section className="admin-dashboard">
         <header className="admin-header">
-          <div><p className="admin-eyebrow">ESPACE PRIVÉ</p><h1>Actualités Djelong</h1></div>
+          <div className="admin-brand"><img src={images.logo} alt="Djelong Papiers" /><div><p className="admin-eyebrow">ESPACE PRIVÉ</p><h1>Actualités Djelong</h1></div></div>
           <div className="admin-actions"><Link to="/actualites">Voir le site</Link><button onClick={() => { sessionStorage.removeItem("djelong-admin-token"); setToken(""); }} aria-label="Se déconnecter"><LogOut size={18} /></button></div>
         </header>
         <div className="admin-grid">
@@ -1410,7 +1623,11 @@ function AdminPortal() {
               <label>Titre<input required value={draft.title} onChange={(event) => updateDraft("title", event.target.value)} placeholder="Titre de l'actualité" /></label>
               <label>Résumé<textarea required rows={3} value={draft.excerpt} onChange={(event) => updateDraft("excerpt", event.target.value)} placeholder="Résumé court" /></label>
               <label>Contenu<textarea required rows={7} value={draft.content} onChange={(event) => updateDraft("content", event.target.value)} placeholder="Texte complet de l'actualité" /></label>
-              <label>Image de couverture (URL OBS)<input required value={draft.coverImage} onChange={(event) => updateDraft("coverImage", event.target.value)} placeholder="https://..." /></label>
+              <div className="admin-upload">
+                <div><span>Image de couverture</span><p>Choisis une photo depuis cet appareil.</p></div>
+                <label className="admin-upload-button"><ImageUp size={18} />{uploading ? "Téléversement..." : "Choisir une image"}<input type="file" accept="image/jpeg,image/png,image/webp" onChange={selectCoverImage} disabled={uploading} /></label>
+                {draft.coverImage && <div className="admin-cover-preview"><img src={draft.coverImage} alt="Aperçu de l'image de couverture" /><button type="button" onClick={() => updateDraft("coverImage", "")}><X size={16} />Retirer l'image</button></div>}
+              </div>
               <div className="admin-form-row"><label>Statut<select value={draft.status} onChange={(event) => updateDraft("status", event.target.value as NewsDraft["status"])}><option value="BROUILLON">Brouillon</option><option value="PUBLIE">Publié</option></select></label><label>Date de publication<input type="datetime-local" value={draft.publishedAt ?? ""} onChange={(event) => updateDraft("publishedAt", event.target.value ? new Date(event.target.value).toISOString() : null)} /></label></div>
               <div className="admin-editor-actions"><button type="submit" disabled={loading}>{loading ? "Enregistrement..." : editingId ? "Enregistrer" : "Ajouter l'actualité"}</button>{editingId && <button type="button" className="admin-cancel" onClick={() => { setEditingId(null); setDraft(emptyNewsDraft); }}>Annuler</button>}</div>
             </form>
