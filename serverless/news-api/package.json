@@ -5,6 +5,7 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "esdk-obs-nodejs": "^3.26.2"
+    "esdk-obs-nodejs": "^3.26.2",
+    "google-auth-library": "^11.0.2"
   }
 }

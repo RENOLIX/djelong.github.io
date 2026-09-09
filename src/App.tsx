@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ChangeEvent
 import { BrowserRouter, Link, NavLink, Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import clsx from "clsx";
+import { CustomerAccount } from "./CustomerAccount";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import {
@@ -22,6 +23,7 @@ import {
   Mail,
   MapPin,
   Menu,
+  UserRound,
   Newspaper,
   PackageCheck,
   Pencil,
@@ -624,6 +626,7 @@ function Header() {
             <div className="header-search">
               <GooeySearch />
             </div>
+            <Link to="/mon-compte" className="customer-header-link" aria-label="Mon compte" title="Mon compte" onClick={() => setOpen(false)}><UserRound size={21} /></Link>
 
             <button className="btn-creuse grid h-11 w-11 place-items-center lg:hidden" onClick={() => setOpen((value) => !value)} aria-label="Ouvrir le menu">
               {open ? <X size={21} /> : <Menu size={21} />}
@@ -1655,6 +1658,7 @@ function AppRoutes() {
       <ScrollToTop />
       {!isAdmin && <Header />}
       <Routes>
+        <Route path="/mon-compte" element={<CustomerAccount />} />
         <Route path="/admin" element={<AdminPortal />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/a-propos" element={<AboutPage />} />

@@ -1,5 +1,7 @@
 const http = require("node:http");
 const { handler } = require("./index.js");
+const { createCustomerAuth } = require("./customer-auth.js");
+const customerAuth = createCustomerAuth();
 
 const port = Number(process.env.PORT || 3000);
 const host = process.env.HOST || "127.0.0.1";
@@ -12,14 +14,25 @@ const server = http.createServer(async (request, response) => {
   }
 
   const chunks = [];
-  for await (const chunk of request) chunks.push(chunk);
+  let size = 0;
+  for await (const chunk of request) {
+    size += chunk.length;
+    if (size > (request.url.startsWith("/customer/") ? 20000 : 9 * 1024 * 1024)) {
+      response.writeHead(413);
+      response.end();
+      return;
+    }
+    chunks.push(chunk);
+  }
 
-  const result = await handler({
+  const event = {
     body: chunks.length ? Buffer.concat(chunks).toString("utf8") : undefined,
     headers: request.headers,
     httpMethod: request.method,
     path: new URL(request.url, "http://localhost").pathname,
-  });
+    remoteAddress: request.socket.remoteAddress,
+  };
+  const result = await customerAuth(event) || await handler(event);
 
   response.writeHead(result.statusCode, result.headers);
   response.end(result.body);
