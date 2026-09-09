@@ -16,4 +16,10 @@
 .customer-logout { display: flex; align-items: center; gap: 8px; margin-top: 20px; }
 .customer-contact, .customer-retry { color: #1d4ed8; text-decoration: underline; text-underline-offset: 4px; }
 .customer-panel button:disabled { opacity: .5; cursor: wait; }
+.customer-form { display: grid; gap: 12px; margin-top: 22px; }
+.customer-form input { width: 100%; padding: 13px 14px; border: 1px solid #d7dee8; border-radius: 6px; background: #fff; color: #111827; outline: none; }
+.customer-form input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px #2563eb1f; }
+.customer-form .customer-retry { width: 100%; border: 0; border-radius: 6px; padding: 13px 16px; color: #fff; background: #2563eb; font-weight: 700; text-decoration: none; cursor: pointer; }
+.customer-form .customer-retry:hover { background: #1d4ed8; }
+.customer-switch { margin-top: 14px; border: 0; background: transparent; color: #1d4ed8; cursor: pointer; text-decoration: underline; text-underline-offset: 4px; }
 @media (max-width: 480px) { .customer-panel { padding: 22px 16px; } .customer-page { padding-top: 140px; } }
