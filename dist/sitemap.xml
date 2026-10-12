@@ -1,26 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://renolix.github.io/djelong.github.io/</loc>
+    <loc>https://djelong.com/</loc>
     <lastmod>2026-07-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://renolix.github.io/djelong.github.io/a-propos</loc>
+    <loc>https://djelong.com/a-propos</loc>
     <lastmod>2026-07-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://renolix.github.io/djelong.github.io/actualites</loc>
+    <loc>https://djelong.com/actualites</loc>
     <lastmod>2026-07-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://renolix.github.io/djelong.github.io/produits</loc>
+    <loc>https://djelong.com/a-propos/histoire</loc>
     <lastmod>2026-07-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://djelong.com/a-propos/message-du-pdg</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://djelong.com/sites</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://djelong.com/durabilite</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://djelong.com/investisseurs</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://djelong.com/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
