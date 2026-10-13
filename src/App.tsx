@@ -58,6 +58,7 @@ const images = {
   activity: asset("images/djelong-media/IMG-20260723-WA0004.jpg"),
   company: asset("images/djelong-media/IMG-20260723-WA0008.jpg"),
   quality: asset("images/djelong-media/IMG-20260723-WA0010.jpg"),
+  specifications: asset("images/djelong-media/paper-specifications-created.png"),
   workshop: asset("images/djelong-media/IMG-20260723-WA0010.jpg"),
   storage: asset("images/djelong-media/IMG-20260723-WA0012.jpg"),
   delivery: asset("images/djelong-media/IMG-20260723-WA0012.jpg"),
@@ -759,7 +760,7 @@ function PaperSpecifications() {
     <section className="bg-[#eff5f0] px-5 py-24 sm:px-8">
       <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.88fr_1.12fr] lg:items-start">
         <div className="reveal overflow-hidden rounded-lg shadow-[0_20px_60px_rgba(19,63,42,0.12)] lg:sticky lg:top-32 lg:self-start">
-          <img src={images.quality} alt="Papier Djelong Papiers" className="h-[360px] w-full object-cover" />
+          <img src={images.specifications} alt="Bobine kraft et échantillons testliner et fluting avec instruments de contrôle, visuel illustratif" className="h-[360px] w-full object-cover" />
         </div>
         <div className="reveal">
           <p className="text-sm font-black uppercase text-[#2c7a4b]">Spécifications papier</p>
