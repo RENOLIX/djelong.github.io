@@ -74,8 +74,8 @@ const galleryPhotos = [
 
 const paperSpecifications = {
   types: ["Testliner", "Fluting"],
-  weights: [90, 100, 110, 120, 130, 150],
-  widths: [850, 900, 1000, 1050, 1100, 1250, 1300, 1400, 1410, 1450, 1500, 1600, 1700, 1900, 1950, 2000, 2050, 2100, 2110, 2150, 2160, 2200, 2220, 2250, 2300, 2310, 2350, 2400, 2450, 2500],
+  weights: { min: 70, max: 170 },
+  widths: { min: 1000, max: 4500 },
 };
 
 const navItems = [
@@ -766,11 +766,11 @@ function PaperSpecifications() {
           <p className="mt-5 max-w-2xl text-lg leading-8 text-[#536a5e]">Djelong Papiers propose des papiers destinés à l'emballage et à la transformation, avec des formats à valider selon la disponibilité et votre cahier des charges.</p>
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             <div className="btn-card p-6"><p className="text-sm font-black uppercase text-[#2c7a4b]">Types</p><p className="mt-3 text-2xl font-black text-[#133f2a]">{paperSpecifications.types.join(" / ")}</p></div>
-            <div className="btn-card p-6"><p className="text-sm font-black uppercase text-[#2c7a4b]">Grammages</p><p className="mt-3 text-2xl font-black text-[#133f2a]">{paperSpecifications.weights.join(" - ")} g</p></div>
+            <div className="btn-card p-6"><p className="text-sm font-black uppercase text-[#2c7a4b]">Grammages</p><p className="mt-3 text-2xl font-black text-[#133f2a]">{paperSpecifications.weights.min} - {paperSpecifications.weights.max} g</p></div>
           </div>
           <div className="btn-card mt-4 p-6">
             <p className="text-sm font-black uppercase text-[#2c7a4b]">Laizes disponibles</p>
-            <div className="mt-4 flex flex-wrap gap-2">{paperSpecifications.widths.map((width) => <span key={width} className="rounded-md bg-[#dbeee0] px-3 py-2 text-sm font-black text-[#17492f]">{width} mm</span>)}</div>
+            <p className="mt-4 text-2xl font-black text-[#133f2a]">{paperSpecifications.widths.min} - {paperSpecifications.widths.max} mm</p>
           </div>
         </div>
       </div>
@@ -1432,7 +1432,12 @@ function Footer() {
       </div>
       <div className="mx-auto mt-10 flex max-w-7xl flex-col justify-between gap-3 border-t border-white/12 pt-6 text-sm text-white/56 md:flex-row">
         <span>© 2026 Djelong Papiers. Tous droits réservés.</span>
-        <span>Site officiel hébergé sur Huawei Cloud.</span>
+        <span className="font-serif italic text-white/70">
+          Developed by{" "}
+          <a href="https://sitemagique.com" target="_blank" rel="noreferrer" className="font-sans font-black not-italic text-white underline decoration-white/40 underline-offset-4 transition-colors hover:text-[#a7d8ad]">
+            SITEMAGIQUE
+          </a>
+        </span>
       </div>
     </footer>
   );
