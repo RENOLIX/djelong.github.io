@@ -44,7 +44,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 const phone = "0563042728";
-const contactEmail = "contact@djelong-papiers.dz";
+const contactEmail = "cuiyulei-99@163.com";
 const mapUrl = "https://maps.app.goo.gl/zAZZtjYuU4ZGvjCv9?g_st=iw";
 const mapEmbedUrl = "https://maps.google.com/maps?hl=fr&q=EURL%20DJELONG%20PAPIERS%2C%20A%C3%AFn%20Oussara%2C%20ILOT%202010%20CITE%20SLIMANI%20SELIMANE&z=16&iwloc=B&output=embed";
 const newsApiUrl = import.meta.env.VITE_NEWS_API_URL?.replace(/\/$/, "") ?? "";
@@ -1120,7 +1120,7 @@ function ContactSection() {
           </div>
         </div>
 
-        <form className="reveal bg-white p-6 shadow-[0_18px_46px_rgba(19,63,42,0.14)] rounded-lg" action="mailto:contact@djelong-papiers.dz" method="post" encType="text/plain">
+        <form className="reveal bg-white p-6 shadow-[0_18px_46px_rgba(19,63,42,0.14)] rounded-lg" action={`mailto:${contactEmail}`} method="post" encType="text/plain">
           <div className="grid gap-4">
             <label className="grid gap-2 text-sm font-black text-[#133f2a]">
               Nom et entreprise
