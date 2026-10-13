@@ -57,16 +57,16 @@ const images = {
   logistics: asset("images/hero/paper-logistics-warehouse.png"),
   activity: asset("images/djelong-media/IMG-20260723-WA0004.jpg"),
   company: asset("images/djelong-media/IMG-20260723-WA0008.jpg"),
-  quality: asset("images/djelong-media/IMG-20260723-WA0009.jpg"),
+  quality: asset("images/djelong-media/IMG-20260723-WA0010.jpg"),
   workshop: asset("images/djelong-media/IMG-20260723-WA0010.jpg"),
   storage: asset("images/djelong-media/IMG-20260723-WA0012.jpg"),
-  delivery: asset("images/djelong-media/IMG-20260723-WA0013.jpg"),
+  delivery: asset("images/djelong-media/IMG-20260723-WA0012.jpg"),
   video: asset("images/djelong-media/VID-20260723-WA0034.mp4"),
 };
 
 const galleryPhotos = [
-  "IMG-20260723-WA0004.jpg", "IMG-20260723-WA0008.jpg", "IMG-20260723-WA0009.jpg", "IMG-20260723-WA0010.jpg",
-  "IMG-20260723-WA0012.jpg", "IMG-20260723-WA0013.jpg", "IMG-20260723-WA0014.jpg", "IMG-20260723-WA0015.jpg",
+  "IMG-20260723-WA0004.jpg", "IMG-20260723-WA0008.jpg", "IMG-20260723-WA0010.jpg",
+  "IMG-20260723-WA0012.jpg",
   "IMG-20260723-WA0019.jpg", "IMG-20260723-WA0020.jpg", "IMG-20260723-WA0021.jpg", "IMG-20260723-WA0022.jpg",
   "IMG-20260723-WA0023.jpg", "IMG-20260723-WA0024.jpg", "IMG-20260723-WA0026.jpg", "IMG-20260723-WA0027.jpg",
   "IMG-20260723-WA0028.jpg", "IMG-20260723-WA0037.jpg", "IMG-20260723-WA0038.jpg", "IMG-20260723-WA0040.jpg",
