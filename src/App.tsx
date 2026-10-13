@@ -74,8 +74,8 @@ const galleryPhotos = [
 
 const paperSpecifications = {
   types: ["Testliner", "Fluting"],
-  weights: { min: 70, max: 170 },
-  widths: { min: 1000, max: 4500 },
+  weights: Array.from({ length: 11 }, (_, index) => 70 + index * 10),
+  widths: Array.from({ length: 71 }, (_, index) => 1000 + index * 50),
 };
 
 const navItems = [
@@ -766,11 +766,11 @@ function PaperSpecifications() {
           <p className="mt-5 max-w-2xl text-lg leading-8 text-[#536a5e]">Djelong Papiers propose des papiers destinés à l'emballage et à la transformation, avec des formats à valider selon la disponibilité et votre cahier des charges.</p>
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             <div className="btn-card p-6"><p className="text-sm font-black uppercase text-[#2c7a4b]">Types</p><p className="mt-3 text-2xl font-black text-[#133f2a]">{paperSpecifications.types.join(" / ")}</p></div>
-            <div className="btn-card p-6"><p className="text-sm font-black uppercase text-[#2c7a4b]">Grammages</p><p className="mt-3 text-2xl font-black text-[#133f2a]">{paperSpecifications.weights.min} - {paperSpecifications.weights.max} g</p></div>
+            <div className="btn-card p-6"><p className="text-sm font-black uppercase text-[#2c7a4b]">Grammages</p><div className="mt-3 flex flex-wrap gap-2">{paperSpecifications.weights.map((weight) => <span key={weight} className="rounded-md bg-[#dbeee0] px-3 py-2 text-sm font-black text-[#17492f]">{weight} g</span>)}</div></div>
           </div>
           <div className="btn-card mt-4 p-6">
             <p className="text-sm font-black uppercase text-[#2c7a4b]">Laizes disponibles</p>
-            <p className="mt-4 text-2xl font-black text-[#133f2a]">{paperSpecifications.widths.min} - {paperSpecifications.widths.max} mm</p>
+            <div className="mt-4 flex max-h-44 flex-wrap gap-2 overflow-y-auto pr-2">{paperSpecifications.widths.map((width) => <span key={width} className="rounded-md bg-[#dbeee0] px-3 py-2 text-sm font-black text-[#17492f]">{width} mm</span>)}</div>
           </div>
         </div>
       </div>
