@@ -46,7 +46,8 @@ const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 const phone = "0563042728";
 const contactEmail = "cuiyulei-99@163.com";
 const mapUrl = "https://maps.app.goo.gl/zAZZtjYuU4ZGvjCv9?g_st=iw";
-const mapEmbedUrl = "https://maps.google.com/maps?hl=fr&q=EURL%20DJELONG%20PAPIERS%2C%20A%C3%AFn%20Oussara%2C%20ILOT%202010%20CITE%20SLIMANI%20SELIMANE&z=16&iwloc=B&output=embed";
+const companyAddress = "N AG3. 8, Section 154, Zone industrielle Ain Oussera, Commune Ain Oussera, Daïra Ain Oussera, W. Djelfa";
+const mapEmbedUrl = `https://maps.google.com/maps?hl=fr&q=${encodeURIComponent(`EURL DJELONG PAPIERS, ${companyAddress}`)}&z=16&iwloc=B&output=embed`;
 const newsApiUrl = import.meta.env.VITE_NEWS_API_URL?.replace(/\/$/, "") ?? "";
 
 const images = {
@@ -1116,7 +1117,7 @@ function ContactSection() {
               <MapPin size={17} />
               EURL DJELONG PAPIERS
             </a>
-            <p className="mt-4 text-sm font-bold text-[#536a5e]">Aïn Oussara, ILOT 2010 Cité Slimani Selimane</p>
+            <p className="mt-4 text-sm font-bold text-[#536a5e]">{companyAddress}</p>
           </div>
         </div>
 
@@ -1426,7 +1427,7 @@ function Footer() {
             <a href={`tel:${phone}`} className="hover:text-white">{phone}</a>
             <a href={mapUrl} target="_blank" rel="noreferrer" className="hover:text-white">Google Maps</a>
             <span>EURL DJELONG PAPIERS</span>
-            <span>Aïn Oussara, ILOT 2010 Cité Slimani Selimane</span>
+            <span>{companyAddress}</span>
           </div>
         </div>
       </div>
