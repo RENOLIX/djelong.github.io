@@ -44,7 +44,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 const phone = "0563042728";
-const contactEmail = "cuiyulei-99@163.com";
+const contactEmail = "office@djelong.com";
 const mapUrl = "https://maps.app.goo.gl/zAZZtjYuU4ZGvjCv9?g_st=iw";
 const companyAddress = "N AG3. 8, Section 154, Zone industrielle Ain Oussera, Commune Ain Oussera, Daïra Ain Oussera, W. Djelfa";
 const mapEmbedUrl = `https://maps.google.com/maps?hl=fr&q=${encodeURIComponent(`EURL DJELONG PAPIERS, ${companyAddress}`)}&z=16&iwloc=B&output=embed`;
