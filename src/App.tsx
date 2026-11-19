@@ -930,7 +930,14 @@ function VideoShowcase() {
   }, []);
 
   return (
-    <section className="video-showcase" aria-label="Vidéo de l'usine Djelong Papiers">
+    <section className="px-5 pb-6 pt-24 sm:px-8" aria-label="Vidéo de l'usine Djelong Papiers">
+      <div className="mx-auto max-w-6xl">
+        <SectionTitle
+          eyebrow="En vidéo"
+          title="Au cœur de l'usine Djelong"
+          text="De la formation de la feuille jusqu'aux bobines prêtes à livrer : la production Djelong Papiers en images."
+        />
+        <div className="video-showcase reveal mt-12">
       <video
         ref={videoRef}
         className="video-showcase-media"
@@ -948,6 +955,8 @@ function VideoShowcase() {
         <source src={asset("videos/djelong-usine-mobile.mp4")} type="video/mp4" media="(max-width: 768px)" />
         <source src={asset("videos/djelong-usine.mp4")} type="video/mp4" />
       </video>
+        </div>
+      </div>
     </section>
   );
 }

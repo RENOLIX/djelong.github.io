@@ -483,9 +483,15 @@ img {
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
-  max-height: 92svh;
   overflow: hidden;
+  border-radius: 1.25rem;
+  border: 1px solid rgba(19, 63, 42, 0.12);
   background: #0b2f20;
+  box-shadow: 0 30px 80px rgba(19, 63, 42, 0.18), 0 8px 22px rgba(19, 63, 42, 0.1);
+}
+
+@media (max-width: 640px) {
+  .video-showcase { border-radius: 0.85rem; }
 }
 
 .video-showcase-media {
