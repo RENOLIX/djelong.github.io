@@ -52,9 +52,9 @@ const newsApiUrl = import.meta.env.VITE_NEWS_API_URL?.replace(/\/$/, "") ?? "";
 
 const images = {
   logo: asset("images/hero/djelong-logo-reference.jpeg"),
-  gate: asset("images/hero/djelong-factory-gate.png"),
-  production: asset("images/hero/paper-production-line.png"),
-  logistics: asset("images/hero/paper-logistics-warehouse.png"),
+  gate: asset("images/hero/djelong-entree-usine.webp"),
+  production: asset("images/hero/djelong-ligne-production.jpg"),
+  logistics: asset("images/hero/djelong-livraison-bobines.jpg"),
   activity: asset("images/djelong-media/IMG-20260723-WA0004.jpg"),
   company: asset("images/djelong-media/IMG-20260723-WA0008.jpg"),
   quality: asset("images/djelong-media/IMG-20260723-WA0010.jpg"),
